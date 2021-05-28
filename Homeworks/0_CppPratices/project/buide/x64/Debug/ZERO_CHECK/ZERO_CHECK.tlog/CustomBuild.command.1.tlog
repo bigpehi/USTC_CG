@@ -1,0 +1,10 @@
+^D:\CPP_REPO\USTC_CG\HOMEWORKS\0_CPPPRATICES\PROJECT\BUIDE\CMAKEFILES\2355115A7B6D69C15886703446E3CF08\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/CPP_repo/USTC_CG/Homeworks/0_CppPratices/project -BD:/CPP_repo/USTC_CG/Homeworks/0_CppPratices/project/buide --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/CPP_repo/USTC_CG/Homeworks/0_CppPratices/project/buide/CppPractices.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
