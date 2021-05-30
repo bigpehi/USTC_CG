@@ -1,0 +1,10 @@
+^D:\CPP_REPO\USTC_CG\HOMEWORKS\0_CPPPRATICES\SAMPLES\SRC\EXECUTABLES\4_LIST_POLYNOMIAL\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/CPP_repo/USTC_CG/Homeworks/0_CppPratices/samples -BD:/CPP_repo/USTC_CG/Homeworks/0_CppPratices/samples/buide --check-stamp-file D:/CPP_repo/USTC_CG/Homeworks/0_CppPratices/samples/buide/src/executables/4_list_Polynomial/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
