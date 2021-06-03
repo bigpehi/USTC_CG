@@ -1,0 +1,10 @@
+^D:\CPP_REPO\USTC_CG\HOMEWORKS\1_MINIDRAW\PROJECT\BUIDE\CMAKEFILES\626AE4BF1847DEB429C978A0F0B30E32\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project -BD:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/MiniDraw.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

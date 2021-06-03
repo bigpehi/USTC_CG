@@ -1,0 +1,140 @@
+{
+	"BUILD_DIR" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen",
+	"CMAKE_BINARY_DIR" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App",
+	"CMAKE_EXECUTABLE" : "C:/Program Files/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/CMakeLists.txt",
+		"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/minidraw.qrc"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/Line.h",
+			"MU",
+			"EWIEGA46WW/moc_Line.cpp",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/Rect.h",
+			"MU",
+			"EWIEGA46WW/moc_Rect.cpp",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/minidraw.h",
+			"MU",
+			"EWIEGA46WW/moc_minidraw.cpp",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/shape.h",
+			"MU",
+			"EWIEGA46WW/moc_shape.cpp",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/viewwidget.h",
+			"MU",
+			"EWIEGA46WW/moc_viewwidget.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/include",
+	"INCLUDE_DIR_Debug" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/include_Debug",
+	"INCLUDE_DIR_MinSizeRel" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/include_MinSizeRel",
+	"INCLUDE_DIR_RelWithDebInfo" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/include_RelWithDebInfo",
+	"INCLUDE_DIR_Release" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/include_Release",
+	"MOC_COMPILATION_FILE" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/mocs_compilation.cpp",
+	"MOC_COMPILATION_FILE_Debug" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/mocs_compilation_Debug.cpp",
+	"MOC_COMPILATION_FILE_MinSizeRel" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/mocs_compilation_MinSizeRel.cpp",
+	"MOC_COMPILATION_FILE_RelWithDebInfo" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/mocs_compilation_RelWithDebInfo.cpp",
+	"MOC_COMPILATION_FILE_Release" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/MiniDraw_App_autogen/mocs_compilation_Release.cpp",
+	"MOC_DEFINITIONS" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB", "WIN32" ],
+	"MOC_DEFINITIONS_Debug" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_WIDGETS_LIB", "WIN32" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App",
+		"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App",
+		"D:/Anaconda/Library/include/qt",
+		"D:/Anaconda/Library/include/qt/QtWidgets",
+		"D:/Anaconda/Library/include/qt/QtGui",
+		"D:/Anaconda/Library/include/qt/QtANGLE",
+		"D:/Anaconda/Library/include/qt/QtCore",
+		"D:/Anaconda/Library/mkspecs/win32-msvc"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : true,
+	"PARALLEL" : 4,
+	"PARSE_CACHE_FILE" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE_Debug" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/ParseCache_Debug.txt",
+	"PARSE_CACHE_FILE_MinSizeRel" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/ParseCache_MinSizeRel.txt",
+	"PARSE_CACHE_FILE_RelWithDebInfo" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/ParseCache_RelWithDebInfo.txt",
+	"PARSE_CACHE_FILE_Release" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/ParseCache_Release.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Anaconda/Library/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Anaconda/Library/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 9,
+	"SETTINGS_FILE" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE_Debug" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutogenUsed_Debug.txt",
+	"SETTINGS_FILE_MinSizeRel" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutogenUsed_MinSizeRel.txt",
+	"SETTINGS_FILE_RelWithDebInfo" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutogenUsed_RelWithDebInfo.txt",
+	"SETTINGS_FILE_Release" : "D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutogenUsed_Release.txt",
+	"SOURCES" : 
+	[
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/Line.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/Rect.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/main.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/minidraw.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/shape.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/src/App/viewwidget.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

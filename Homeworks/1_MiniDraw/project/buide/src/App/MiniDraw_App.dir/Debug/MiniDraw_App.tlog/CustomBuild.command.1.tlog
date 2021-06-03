@@ -1,0 +1,30 @@
+^D:\CPP_REPO\USTC_CG\HOMEWORKS\1_MINIDRAW\PROJECT\BUIDE\CMAKEFILES\BEFED98C0C343D1076E701F24F67E8C7\QRC_MINIDRAW.CPP.RULE
+setlocal
+cd D:\CPP_repo\USTC_CG\Homeworks\1_MiniDraw\project\buide\src\App
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutoRcc_minidraw_EWIEGA46WW_Info.json Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutoRcc_minidraw_EWIEGA46WW_Info.json Release
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutoRcc_minidraw_EWIEGA46WW_Info.json MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/MiniDraw_App_autogen.dir/AutoRcc_minidraw_EWIEGA46WW_Info.json RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CPP_REPO\USTC_CG\HOMEWORKS\1_MINIDRAW\PROJECT\SRC\APP\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project -BD:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide --check-stamp-file D:/CPP_repo/USTC_CG/Homeworks/1_MiniDraw/project/buide/src/App/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
