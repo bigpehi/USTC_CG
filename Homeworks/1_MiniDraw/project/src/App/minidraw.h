@@ -19,6 +19,7 @@ public:
 	QAction* Action_Line;
 	QAction* Action_Rect;
 	QAction* Action_Ellipse;
+	QAction* Action_Brush;
 
 	void Creat_Menu();
 	void Creat_ToolBar();

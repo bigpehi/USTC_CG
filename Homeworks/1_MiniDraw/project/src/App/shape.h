@@ -17,7 +17,8 @@ public:
 		kDefault = 0,
 		kLine = 1,
 		kRect = 2,
-		kEllipse = 3
+		kEllipse = 3,
+		kBrush = 4
 	};
 
 protected:

@@ -26,6 +26,9 @@ void MiniDraw::Creat_Action() { // ²Ëµ¥À¸£¬¹¤¾ßÀ¸ÖÐµÄ¶¯×÷£¨°´Å¥£¬Ñ¡Ïî£©£¬½¨Á¢Ïà¹
 
 	Action_Ellipse = new QAction(tr("&Ellipse"), this);
 	connect(Action_Ellipse, SIGNAL(triggered()), view_widget_, SLOT(setEllipse()));
+
+	Action_Brush = new QAction(tr("&Brush"), this);
+	connect(Action_Brush, SIGNAL(triggered()), view_widget_, SLOT(setBrush()));
 }
 
 void MiniDraw::Creat_ToolBar() {
@@ -34,6 +37,15 @@ void MiniDraw::Creat_ToolBar() {
 	pToolBar->addAction(Action_Line);
 	pToolBar->addAction(Action_Rect);
 	pToolBar->addAction(Action_Ellipse);
+	pToolBar->addAction(Action_Brush);
+	QIcon icon_Line(":/line.png");
+	Action_Line->setIcon(icon_Line);
+	QIcon icon_Rect(":/rect.png");
+	Action_Rect->setIcon(icon_Rect);
+	QIcon icon_Ellipse(":/ellipse.png");
+	Action_Ellipse->setIcon(icon_Ellipse);
+	QIcon icon_Brush(":/brush.png");
+	Action_Brush->setIcon(icon_Brush);
 }
 
 void MiniDraw::Creat_Menu() {

@@ -25,6 +25,10 @@ void ViewWidget::setEllipse()
 	type_ = Shape::kEllipse;
 }
 
+void ViewWidget::setBrush()
+{
+	type_ = Shape::kBrush;
+}
 
 void ViewWidget::mousePressEvent(QMouseEvent* event)
 {
@@ -49,6 +53,11 @@ void ViewWidget::mousePressEvent(QMouseEvent* event)
 			shape_ = new Ellipse2();
 			qDebug() << "shape	" << "Ellipse" << endl;
 			break;
+		case Shape::kBrush:
+			shape_ = new Brush();
+			qDebug() << "shape	" << "Brush" << endl;
+			qDebug() << "create a brush" << endl;
+			break;
 		}
 		if (shape_ != NULL)
 		{
@@ -69,11 +78,11 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
 	{
 		// 删除临时图元
 		std::vector<Shape*>::iterator it = shape_list_.begin();
-		qDebug() << shape_cnt_ << endl;
+		//qDebug() << shape_cnt_ << endl;
 		for (int i = 0; i < shape_cnt_; i++) {
 			it++;
 		}
-		qDebug() << shape_cnt_ << endl;
+		//qDebug() << shape_cnt_ << endl;
 		shape_list_.erase(it, shape_list_.end());
 
 		end_point_ = event->pos(); // 若为真，则设置图元终止点位鼠标当前位置
@@ -98,9 +107,20 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
 			//qDebug() << "rect_point		" << end_point_.rx() << "	" << end_point_.ry() << endl;
 			shape_list_.push_back(current_Ellipse_);
 			break;}
+		case Shape::kBrush: {
+			qDebug() << "brush is moving" << endl;
+			QPointF *current_point_ = new QPointF();
+			current_point_->setX(end_point_.rx());
+			current_point_->setY(end_point_.ry());
+			Brush* brush = (Brush*)shape_;
+			brush->Add_point(current_point_);
+			shape_list_.push_back(brush);
+
+			break; }
 		}
 
 		update();
+		qDebug() << "updata" << endl;
 	}
 }
 
@@ -126,6 +146,16 @@ void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 		Ellipse2* current_Ellipse_ = NULL;
 		current_Ellipse_ = new Ellipse2(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
 		shape_list_.push_back(current_Ellipse_);
+		shape_cnt_++;//设置图元数量
+		break; }
+	case Shape::kBrush: {
+		qDebug() << "release a brush" << endl;
+		QPointF* current_point_ = new QPointF();
+		current_point_->setX(end_point_.rx());
+		current_point_->setY(end_point_.ry());
+		Brush* brush = (Brush*)shape_;
+		brush->Add_point(current_point_);
+		shape_list_.push_back(brush);
 		shape_cnt_++;//设置图元数量
 		break; }
 	}

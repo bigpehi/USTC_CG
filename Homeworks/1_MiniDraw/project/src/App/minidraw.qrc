@@ -1,4 +1,9 @@
 <RCC>
-    <qresource prefix="MiniDraw">
+    <qresource prefix="/">
+        <file>brush.png</file>
+        <file>ellipse.png</file>
+        <file>line.png</file>
+        <file>polygon.png</file>
+        <file>rect.png</file>
     </qresource>
 </RCC>

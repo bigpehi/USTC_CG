@@ -6,6 +6,7 @@
 #include "Line.h"
 #include "Rect.h"
 #include "Ellipse2.h"
+#include "Brush.h"
 
 
 #include <qevent.h>
@@ -48,5 +49,6 @@ public slots:
 	void setLine();
 	void setRect();
 	void setEllipse();
+	void setBrush();
 
 };
