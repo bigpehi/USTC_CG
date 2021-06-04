@@ -31,7 +31,7 @@ private:
 	Shape* shape_;
 	std::vector<Shape*> shape_list_;
 	std::vector<Line*> line_array_;
-	int  line_cnt_=0; // 用于记录当前需要花的所有元素的最后一个，其后面的为临时图元
+	int  shape_cnt_ = 0; // 用于记录当前需要draw的所有元素的最后一个，其后面的为临时图元
 
 
 public:

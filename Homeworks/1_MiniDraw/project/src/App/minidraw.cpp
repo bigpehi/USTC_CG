@@ -22,7 +22,7 @@ void MiniDraw::Creat_Action() { // ²Ëµ¥À¸£¬¹¤¾ßÀ¸ÖÐµÄ¶¯×÷£¨°´Å¥£¬Ñ¡Ïî£©£¬½¨Á¢Ïà¹
 	connect(Action_Line, SIGNAL(triggered()), view_widget_, SLOT(setLine()));
 
 	Action_Rect = new QAction(tr("&Rect"), this);
-	connect(Action_Rect, &QAction::triggered, view_widget_, &ViewWidget::setRect);
+	connect(Action_Rect, SIGNAL(triggered()), view_widget_, SLOT(setRect()));
 }
 
 void MiniDraw::Creat_ToolBar() {

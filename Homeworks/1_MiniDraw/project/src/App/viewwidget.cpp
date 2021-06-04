@@ -10,9 +10,6 @@ ViewWidget::ViewWidget(QWidget* parent)
 	type_ = Shape::kDefault;
 }
 
-ViewWidget::~ViewWidget()
-{
-}
 
 void ViewWidget::setLine()
 {
@@ -32,19 +29,22 @@ void ViewWidget::mousePressEvent(QMouseEvent* event)
 		{
 		case Shape::kLine:
 			shape_ = new Line();
+			qDebug() << "shape	" << "line" << endl;
 
 			break;
 		case Shape::kDefault:
+			qDebug() << "shape	" << "default" << endl;
 			break;
 
 		case Shape::kRect:
 			shape_ = new Rect();
+			qDebug() << "shape	" << "rect" << endl;
 			break;
 		}
 		if (shape_ != NULL)
 		{
 			draw_status_ = true; // 设置绘制状态为 – 绘制
-			start_point_ =  event->pos(); // 将图元初始点设置为当前鼠标击发点
+			start_point_ = end_point_ =  event->pos(); // 将图元初始点设置为当前鼠标击发点
 			shape_->set_start(start_point_);
 			shape_->set_end(end_point_);
 
@@ -58,30 +58,56 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
 {
 	if (draw_status_) // 判断当前绘制状态
 	{
-		std::vector<Line*>::iterator it = line_array_.begin(); 
-		qDebug() << line_cnt_ << endl;
-		for (int i = 0; i < line_cnt_; i++) {
+		// 删除临时图元
+		std::vector<Shape*>::iterator it = shape_list_.begin();
+		qDebug() << shape_cnt_ << endl;
+		for (int i = 0; i < shape_cnt_; i++) {
 			it++;
 		}
-		qDebug() << line_cnt_ << endl;
-		line_array_.erase(it, line_array_.end());
+		qDebug() << shape_cnt_ << endl;
+		shape_list_.erase(it, shape_list_.end());
+
 		end_point_ = event->pos(); // 若为真，则设置图元终止点位鼠标当前位置
-		Line* current_line_ = NULL;
-		current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
-		line_array_.push_back(current_line_);
+
+		switch (type_){
+		case Shape::kLine: {
+			Line* current_line_ = NULL;
+			current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+			shape_list_.push_back(current_line_);
+			break; }
+		case Shape::kDefault: {
+			break; }
+		case Shape::kRect: {
+			Rect* current_rect_ = NULL;
+			current_rect_ = new Rect(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+			//qDebug() << "rect_point		" << end_point_.rx() << "	" << end_point_.ry() << endl;
+			shape_list_.push_back(current_rect_);
+			break; }
+		}
+
 		update();
 	}
 }
 
 void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-	//for (std::vector<Line*>::iterator it = tail; it != line_array_.end(); it++) {
-	//	line_array_.erase(it);
-	//}
-	Line* current_line_ = NULL;
-	current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
-	line_array_.push_back(current_line_);
-	line_cnt_++;//设置图元数量
+
+	switch (type_) {
+	case Shape::kLine: {
+		Line* current_line_ = NULL;
+		current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+		shape_list_.push_back(current_line_);
+		shape_cnt_++;//设置图元数量
+		break; }
+	case Shape::kDefault: {
+		break; }
+	case Shape::kRect: {
+		Rect* current_rect_ = NULL;
+		current_rect_ = new Rect(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+		shape_list_.push_back(current_rect_);
+		shape_cnt_++;//设置图元数量
+		break; }
+	}
 	draw_status_ = false;
 	qDebug() << "release	" << draw_status_ << endl;
 	update();
@@ -89,25 +115,26 @@ void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void ViewWidget::paintEvent(QPaintEvent*)
 {
-	qDebug() << "paintevent" << endl;
+	//qDebug() << "paintevent" << endl;
 	QPainter painter(this);
-	// 重画所有线段
-	for (size_t i = 0; i < line_array_.size(); i++)
+	// 重画所有图元
+	for (size_t i = 0; i < shape_list_.size(); i++)
 	{
-		line_array_[i]->Draw(painter);
+		shape_list_[i]->Draw(painter);
 	}
 	painter.end();
-	painter.drawLine(start_point_, end_point_);
+	//painter.drawLine(start_point_, end_point_);
 }
 
-//ViewWidget::~ViewWidget()
-//{
-//	for (size_t i = 0; i < line_array_.size(); i++)
-//	{
-//		if (line_array_[i])
-//		{
-//			delete line_array_[i];
-//			line_array_[i] = NULL;
-//		}
-//	}
-//}
+ViewWidget::~ViewWidget()
+{
+	//非QT资源，需要用户自己回收
+	for (size_t i = 0; i < shape_list_.size(); i++)
+	{
+		if (shape_list_[i])
+		{
+			delete shape_list_[i];
+			shape_list_[i] = NULL;
+		}
+	}
+}
