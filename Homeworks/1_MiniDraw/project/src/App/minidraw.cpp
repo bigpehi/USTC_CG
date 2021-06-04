@@ -29,6 +29,12 @@ void MiniDraw::Creat_Action() { // ²Ëµ¥À¸£¬¹¤¾ßÀ¸ÖÐµÄ¶¯×÷£¨°´Å¥£¬Ñ¡Ïî£©£¬½¨Á¢Ïà¹
 
 	Action_Brush = new QAction(tr("&Brush"), this);
 	connect(Action_Brush, SIGNAL(triggered()), view_widget_, SLOT(setBrush()));
+
+
+	Action_Undo = new QAction(tr("&Undo"), this);
+	connect(Action_Undo, SIGNAL(triggered()), view_widget_, SLOT(undo()));
+
+
 }
 
 void MiniDraw::Creat_ToolBar() {
@@ -38,6 +44,8 @@ void MiniDraw::Creat_ToolBar() {
 	pToolBar->addAction(Action_Rect);
 	pToolBar->addAction(Action_Ellipse);
 	pToolBar->addAction(Action_Brush);
+	pToolBar->addAction(Action_Undo);
+	//pToolBar->addAction(Action_Redo);
 	QIcon icon_Line(":/line.png");
 	Action_Line->setIcon(icon_Line);
 	QIcon icon_Rect(":/rect.png");
@@ -46,6 +54,8 @@ void MiniDraw::Creat_ToolBar() {
 	Action_Ellipse->setIcon(icon_Ellipse);
 	QIcon icon_Brush(":/brush.png");
 	Action_Brush->setIcon(icon_Brush);
+	QIcon icon_Undo(":/undo.png");
+	Action_Undo->setIcon(icon_Undo);
 }
 
 void MiniDraw::Creat_Menu() {
@@ -54,6 +64,7 @@ void MiniDraw::Creat_Menu() {
 	pMenu->addAction(Action_Line);
 	pMenu->addAction(Action_Rect);
 	pMenu->addAction(Action_Ellipse);
+	pMenu->addAction(Action_Undo);
 }
 
 void MiniDraw::AboutBox() {

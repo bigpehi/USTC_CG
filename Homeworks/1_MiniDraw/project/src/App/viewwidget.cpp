@@ -30,6 +30,21 @@ void ViewWidget::setBrush()
 	type_ = Shape::kBrush;
 }
 
+void ViewWidget::undo()
+{
+	qDebug() << "undo" << endl;
+	if (!shape_list_.empty()) {
+		shape_list_.pop_back();
+		shape_cnt_--;
+
+	}
+	else
+	{
+		qDebug() << "The canvas is empty!" << endl;
+	}
+	update();
+}
+
 void ViewWidget::mousePressEvent(QMouseEvent* event)
 {
 	if (Qt::LeftButton == event->button())
@@ -126,6 +141,14 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
 
 void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 {
+	// 删除临时图元
+	std::vector<Shape*>::iterator it = shape_list_.begin();
+	//qDebug() << shape_cnt_ << endl;
+	for (int i = 0; i < shape_cnt_; i++) {
+		it++;
+	}
+	//qDebug() << shape_cnt_ << endl;
+	shape_list_.erase(it, shape_list_.end());
 
 	switch (type_) {
 	case Shape::kLine: {
@@ -166,7 +189,8 @@ void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void ViewWidget::paintEvent(QPaintEvent*)
 {
-	//qDebug() << "paintevent" << endl;
+	qDebug() << "paintevent" << endl;
+	qDebug() << shape_list_.size() << endl;
 	QPainter painter(this);
 	// 重画所有图元
 	for (size_t i = 0; i < shape_list_.size(); i++)
