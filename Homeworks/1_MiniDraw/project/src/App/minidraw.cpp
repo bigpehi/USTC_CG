@@ -34,7 +34,8 @@ void MiniDraw::Creat_Action() { // ²Ëµ¥À¸£¬¹¤¾ßÀ¸ÖÐµÄ¶¯×÷£¨°´Å¥£¬Ñ¡Ïî£©£¬½¨Á¢Ïà¹
 	Action_Undo = new QAction(tr("&Undo"), this);
 	connect(Action_Undo, SIGNAL(triggered()), view_widget_, SLOT(undo()));
 
-
+	Action_Color = new QAction(tr("&Color"), this);
+	connect(Action_Color, SIGNAL(triggered()), view_widget_, SLOT(setColor()));
 }
 
 void MiniDraw::Creat_ToolBar() {
@@ -45,7 +46,7 @@ void MiniDraw::Creat_ToolBar() {
 	pToolBar->addAction(Action_Ellipse);
 	pToolBar->addAction(Action_Brush);
 	pToolBar->addAction(Action_Undo);
-	//pToolBar->addAction(Action_Redo);
+	pToolBar->addAction(Action_Color);
 	QIcon icon_Line(":/line.png");
 	Action_Line->setIcon(icon_Line);
 	QIcon icon_Rect(":/rect.png");
@@ -56,6 +57,8 @@ void MiniDraw::Creat_ToolBar() {
 	Action_Brush->setIcon(icon_Brush);
 	QIcon icon_Undo(":/undo.png");
 	Action_Undo->setIcon(icon_Undo);
+	QIcon icon_Color(":/Color.png");
+	Action_Color->setIcon(icon_Color);
 }
 
 void MiniDraw::Creat_Menu() {
@@ -65,6 +68,7 @@ void MiniDraw::Creat_Menu() {
 	pMenu->addAction(Action_Rect);
 	pMenu->addAction(Action_Ellipse);
 	pMenu->addAction(Action_Undo);
+	pMenu->addAction(Action_Color);
 }
 
 void MiniDraw::AboutBox() {

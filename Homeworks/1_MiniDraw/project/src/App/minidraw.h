@@ -21,6 +21,7 @@ public:
 	QAction* Action_Ellipse;
 	QAction* Action_Brush;
 	QAction* Action_Undo;
+	QAction* Action_Color;
 
 	void Creat_Menu();
 	void Creat_ToolBar();

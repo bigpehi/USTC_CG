@@ -1,4 +1,6 @@
 #include "viewwidget.h"
+#include <QColorDialog>
+#include <QtGui>
 
 ViewWidget::ViewWidget(QWidget* parent)
 	: QWidget(parent)
@@ -44,6 +46,13 @@ void ViewWidget::undo()
 	}
 	update();
 }
+
+void ViewWidget::setColor()
+{
+	color = QColorDialog::getColor(QColor(0, 0, 0));
+	//qDebug() << "	r=" <<color.red() << "	g=" << color.green() << "	b=" << color.blue() << endl;
+}
+
 
 void ViewWidget::mousePressEvent(QMouseEvent* event)
 {
@@ -105,20 +114,20 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
 		switch (type_){
 		case Shape::kLine: {
 			Line* current_line_ = NULL;
-			current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+			current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry(),color);
 			shape_list_.push_back(current_line_);
 			break; }
 		case Shape::kDefault: {
 			break; }
 		case Shape::kRect: {
 			Rect* current_rect_ = NULL;
-			current_rect_ = new Rect(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+			current_rect_ = new Rect(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry(), color);
 			//qDebug() << "rect_point		" << end_point_.rx() << "	" << end_point_.ry() << endl;
 			shape_list_.push_back(current_rect_);
 			break; }
 		case Shape::kEllipse: {
 			Ellipse2* current_Ellipse_ = NULL;
-			current_Ellipse_ = new Ellipse2(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+			current_Ellipse_ = new Ellipse2(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry(),color);
 			//qDebug() << "rect_point		" << end_point_.rx() << "	" << end_point_.ry() << endl;
 			shape_list_.push_back(current_Ellipse_);
 			break;}
@@ -129,6 +138,7 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
 			current_point_->setY(end_point_.ry());
 			Brush* brush = (Brush*)shape_;
 			brush->Add_point(current_point_);
+			brush->color_ = color;
 			shape_list_.push_back(brush);
 
 			break; }
@@ -153,7 +163,7 @@ void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 	switch (type_) {
 	case Shape::kLine: {
 		Line* current_line_ = NULL;
-		current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+		current_line_ = new Line(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry(), color);
 		shape_list_.push_back(current_line_);
 		shape_cnt_++;//设置图元数量
 		break; }
@@ -161,13 +171,13 @@ void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 		break; }
 	case Shape::kRect: {
 		Rect* current_rect_ = NULL;
-		current_rect_ = new Rect(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+		current_rect_ = new Rect(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry(), color);
 		shape_list_.push_back(current_rect_);
 		shape_cnt_++;//设置图元数量
 		break; }
 	case Shape::kEllipse: {
 		Ellipse2* current_Ellipse_ = NULL;
-		current_Ellipse_ = new Ellipse2(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+		current_Ellipse_ = new Ellipse2(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry(), color);
 		shape_list_.push_back(current_Ellipse_);
 		shape_cnt_++;//设置图元数量
 		break; }

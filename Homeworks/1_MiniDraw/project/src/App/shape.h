@@ -20,6 +20,7 @@ public:
 		kEllipse = 3,
 		kBrush = 4
 	};
+	QColor color;
 
 protected:
 	QPoint start;
