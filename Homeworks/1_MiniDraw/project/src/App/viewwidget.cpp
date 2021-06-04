@@ -1,5 +1,4 @@
 #include "viewwidget.h"
-//#include <Line.h>
 
 ViewWidget::ViewWidget(QWidget* parent)
 	: QWidget(parent)
@@ -21,6 +20,12 @@ void ViewWidget::setRect()
 	type_ = Shape::kRect;
 }
 
+void ViewWidget::setEllipse()
+{
+	type_ = Shape::kEllipse;
+}
+
+
 void ViewWidget::mousePressEvent(QMouseEvent* event)
 {
 	if (Qt::LeftButton == event->button())
@@ -39,6 +44,10 @@ void ViewWidget::mousePressEvent(QMouseEvent* event)
 		case Shape::kRect:
 			shape_ = new Rect();
 			qDebug() << "shape	" << "rect" << endl;
+			break;
+		case Shape::kEllipse:
+			shape_ = new Ellipse2();
+			qDebug() << "shape	" << "Ellipse" << endl;
 			break;
 		}
 		if (shape_ != NULL)
@@ -83,6 +92,12 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
 			//qDebug() << "rect_point		" << end_point_.rx() << "	" << end_point_.ry() << endl;
 			shape_list_.push_back(current_rect_);
 			break; }
+		case Shape::kEllipse: {
+			Ellipse2* current_Ellipse_ = NULL;
+			current_Ellipse_ = new Ellipse2(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+			//qDebug() << "rect_point		" << end_point_.rx() << "	" << end_point_.ry() << endl;
+			shape_list_.push_back(current_Ellipse_);
+			break;}
 		}
 
 		update();
@@ -105,6 +120,12 @@ void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
 		Rect* current_rect_ = NULL;
 		current_rect_ = new Rect(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
 		shape_list_.push_back(current_rect_);
+		shape_cnt_++;//设置图元数量
+		break; }
+	case Shape::kEllipse: {
+		Ellipse2* current_Ellipse_ = NULL;
+		current_Ellipse_ = new Ellipse2(start_point_.rx(), start_point_.ry(), end_point_.rx(), end_point_.ry());
+		shape_list_.push_back(current_Ellipse_);
 		shape_cnt_++;//设置图元数量
 		break; }
 	}

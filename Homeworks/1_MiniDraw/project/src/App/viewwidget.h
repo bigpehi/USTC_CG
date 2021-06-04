@@ -5,6 +5,8 @@
 #include "Shape.h"
 #include "Line.h"
 #include "Rect.h"
+#include "Ellipse2.h"
+
 
 #include <qevent.h>
 #include <qpainter.h>
@@ -45,5 +47,6 @@ signals:
 public slots:
 	void setLine();
 	void setRect();
+	void setEllipse();
 
 };
