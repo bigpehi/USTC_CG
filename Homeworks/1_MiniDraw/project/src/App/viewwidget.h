@@ -33,6 +33,7 @@ private:
 	Shape::Type type_;
 	Shape* shape_;
 	QColor color;
+	int width_=1;
 	std::vector<Shape*> shape_list_;
 	int  shape_cnt_ = 0; // 用于记录当前需要draw的所有元素的最后一个，其后面的为临时图元
 
@@ -52,5 +53,11 @@ public slots:
 	void setBrush();
 	void undo();
 	void setColor();
+	void setPenStyle();
+	void setPenWidth1();
+	void setPenWidth2();
+	void setPenWidth3();
+	void setPenWidth4();
+	void setPenWidth5();
 
 };

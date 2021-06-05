@@ -22,6 +22,9 @@ public:
 	QAction* Action_Brush;
 	QAction* Action_Undo;
 	QAction* Action_Color;
+	QAction* Action_Pen_Width;
+	QAction* Action_Pen_Style;
+
 
 	void Creat_Menu();
 	void Creat_ToolBar();
@@ -29,6 +32,7 @@ public:
 	void Init();
 
 	void AboutBox(); //message box
+	int SetWidthComboBox();
 
 private:
 	Ui::MiniDrawClass ui;

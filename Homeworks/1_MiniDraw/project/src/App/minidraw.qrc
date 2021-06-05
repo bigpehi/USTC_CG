@@ -8,5 +8,6 @@
         <file>redo.png</file>
         <file>undo.png</file>
         <file>Color.png</file>
+        <file>width.png</file>
     </qresource>
 </RCC>

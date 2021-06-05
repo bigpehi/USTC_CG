@@ -2,21 +2,22 @@
 
 
 
-Brush::Brush(QPointF* point_set,  QColor color)
+Brush::Brush(QPointF* point_set,  QColor color, int width)
 {
 	point_set_ = point_set;
 	color_ = color;
+	width_ = width;
 }
 
 
 void Brush::Draw(QPainter& painter)
 {
-	painter.setPen(QPen(color_, 5));
+	painter.setPen(QPen(color_, width_));
 	//painter.drawPoints(point_set_, point_num); // ²»Á¬Ðø
 	for (int i = 0; i < point_num-1; i++) {
 		painter.drawLine(point_set_[i], point_set_[i + 1]);
 	}
-	//qDebug() << "drawing points" << "points num	" << point_num <<endl;
+	qDebug() << "width_" << width_ << point_num <<endl;
 }
 
 void Brush::Add_point(QPointF* point) {
