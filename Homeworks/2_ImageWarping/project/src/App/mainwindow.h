@@ -49,6 +49,10 @@ private:
 	QAction		*action_invert_;
 	QAction		*action_mirror_;
 	QAction		*action_gray_;
+	QAction     *action_draw_line_;
+	QAction		*action_warp_IDW_;
+	QAction		*action_warp_RBF_;
+	QAction		*action_undo_line_;
 	QAction		*action_restore_;
 
 	ImageWidget		*imagewidget_;
