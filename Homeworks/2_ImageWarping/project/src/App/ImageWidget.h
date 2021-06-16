@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <Line.h>
 #include <warp_IDW.h>
+#include <warp_RBF.h>
 #include <QDebug>
 
 QT_BEGIN_NAMESPACE

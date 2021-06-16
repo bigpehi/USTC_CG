@@ -148,11 +148,36 @@ void ImageWidget::Warp_IDW() {
 
 
 void ImageWidget::Warp_RBF() {
-	warp_bool_ = true;
-	line_list_.clear();
+	if (line_cnt_ == 0)
+		return;
+	QVector<QPoint> p_points, q_points;
+	for (size_t i = 0; i < line_list_.size(); i++)
+	{
+		double image_top_left_x = (width() - ptr_image_->width()) / 2;
+		double image_top_left_y = (height() - ptr_image_->height()) / 2;
+		QPoint p(line_list_[i]->start_point_x_ - image_top_left_x, line_list_[i]->start_point_y_ - image_top_left_y);
+		QPoint q(line_list_[i]->end_point_x_ - image_top_left_x, line_list_[i]->end_point_y_ - image_top_left_y);
+		p_points.append(p);
+		q_points.append(q);
+	}
+
+	RBF* curent_warp_RBF = new RBF(p_points, q_points);
+	QImage* image_output = curent_warp_RBF->warp_image_by_RBF(*ptr_image_);
+	for (int i = 0; i < ptr_image_->width(); i++)
+	{
+		for (int j = 0; j < ptr_image_->height(); j++)
+		{
+			QRgb color = image_output->pixel(i, j);
+			ptr_image_->setPixel(i, j, qRgb(qRed(color), qGreen(color), qBlue(color)));
+		}
+	}
+
+	// clear lines
+	warp_bool_ = false;
 	line_cnt_ = 0;
+	line_list_.clear();
+
 	update();
-	qDebug() << "warp_RBF" << endl;
 }
 
 void ImageWidget::DrawLine()
