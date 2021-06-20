@@ -74,6 +74,8 @@ void ImageWidget::paintEvent(QPaintEvent* paintevent)
 
 	// Draw image
 	QRect rect = QRect(0, 0, image_->width(), image_->height());
+	//qDebug() << "width()" << image_->width() << "height" << image_->height() << endl;
+
 	painter.drawImage(rect, *image_);
 
 	// Draw choose region
@@ -190,35 +192,34 @@ void ImageWidget::mouseMoveEvent(QMouseEvent* mouseevent)
 		// Paste rectangle region to object image
 		if (is_pasting_)
 		{
-			// Start point in object image
 			int xpos = mouseevent->pos().rx();
 			int ypos = mouseevent->pos().ry();
 
-			// Start point in source image
-			int xsourcepos = source_window_->imagewidget_->point_start_.rx();
-			int ysourcepos = source_window_->imagewidget_->point_start_.ry();
+			roi_bg_.x = xpos;
+			roi_bg_.y = ypos;
+			roi_bg_.width = source_window_->imagewidget_->roi_fg_.width;
+			roi_bg_.height = source_window_->imagewidget_->roi_fg_.height;
 
-			// Width and Height of rectangle region
-			int w = source_window_->imagewidget_->point_end_.rx()
-				- source_window_->imagewidget_->point_start_.rx() + 1;
-			int h = source_window_->imagewidget_->point_end_.ry()
-				- source_window_->imagewidget_->point_start_.ry() + 1;
+			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
 
-			// Paste
-			if ((xpos > 0) && (ypos > 0) && (xpos + w < image_->width()) && (ypos + h < image_->height()))
-			{
-				// Restore image 
-				*(image_) = *(image_backup_);
+			// QImage -> Mat
+			QImage image_bg = image_backup_->copy();
+			cv::Mat src_bg = QImage2cvMat(image_bg); //image_是拼接后的图片，不能用
+			cv::Mat src_fg = QImage2cvMat(*source_window_->imagewidget_->image());
+			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
 
-				// Paste
-				for (int i = 0; i < w; i++)
-				{
-					for (int j = 0; j < h; j++)
-					{
-						image_->setPixel(xpos + i, ypos + j, source_window_->imagewidget_->image()->pixel(xsourcepos + i, ysourcepos + j));
-					}
-				}
+			//if (solver_->info() != Success) {
+			//	qDebug() << "decomposition failed" << endl;
+			//}
+			if (source_window_->imagewidget_->solver_.info() != Success) {
+				qDebug() << "decomposition failed" << endl;
 			}
+			PIE pie(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
+			cv::Mat blend_result = pie.get_output_image_();
+
+			QImage result = Mat2QImage(blend_result);
+			*image_ = result;
+
 		}
 		break;
 
@@ -226,35 +227,34 @@ void ImageWidget::mouseMoveEvent(QMouseEvent* mouseevent)
 		// Paste rectangle region to object image
 		if (is_pasting_)
 		{
-			// Start point in object image
 			int xpos = mouseevent->pos().rx();
 			int ypos = mouseevent->pos().ry();
 
-			// Start point in source image
-			int xsourcepos = source_window_->imagewidget_->point_start_.rx();
-			int ysourcepos = source_window_->imagewidget_->point_start_.ry();
+			roi_bg_.x = xpos;
+			roi_bg_.y = ypos;
+			roi_bg_.width = source_window_->imagewidget_->roi_fg_.width;
+			roi_bg_.height = source_window_->imagewidget_->roi_fg_.height;
 
-			// Width and Height of rectangle region
-			int w = source_window_->imagewidget_->point_end_.rx()
-				- source_window_->imagewidget_->point_start_.rx() + 1;
-			int h = source_window_->imagewidget_->point_end_.ry()
-				- source_window_->imagewidget_->point_start_.ry() + 1;
+			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
 
-			// Paste
-			if ((xpos > 0) && (ypos > 0) && (xpos + w < image_->width()) && (ypos + h < image_->height()))
-			{
-				// Restore image 
-				*(image_) = *(image_backup_);
+			// QImage -> Mat
+			QImage image_bg = image_backup_->copy();
+			cv::Mat src_bg = QImage2cvMat(image_bg); //image_是拼接后的图片，不能用
+			cv::Mat src_fg = QImage2cvMat(*source_window_->imagewidget_->image());
+			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
 
-				// Paste
-				for (int i = 0; i < w; i++)
-				{
-					for (int j = 0; j < h; j++)
-					{
-						image_->setPixel(xpos + i, ypos + j, source_window_->imagewidget_->image()->pixel(xsourcepos + i, ysourcepos + j));
-					}
-				}
+			//if (solver_->info() != Success) {
+			//	qDebug() << "decomposition failed" << endl;
+			//}
+			if (source_window_->imagewidget_->solver_.info() != Success) {
+				qDebug() << "decomposition failed" << endl;
 			}
+			PIE pieMixed(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
+			cv::Mat blend_result = pieMixed.get_output_image_();
+
+			QImage result = Mat2QImage(blend_result);
+			*image_ = result;
+
 		}
 		break;
 
@@ -281,6 +281,10 @@ void ImageWidget::mouseReleaseEvent(QMouseEvent* mouseevent)
 			roi_fg_.width = point_end_.x() - point_start_.x();
 			roi_fg_.height = point_end_.y() - point_start_.y();
 			qDebug() << roi_fg_.x << "  " << roi_fg_.y << "  " << roi_fg_.width << "  " << roi_fg_.height << endl;
+
+			// 矩形框选定，立刻计算系数矩阵
+			compute_coefficient_matrix();
+
 		}
 		break;
 	case kPaste:
@@ -294,18 +298,20 @@ void ImageWidget::mouseReleaseEvent(QMouseEvent* mouseevent)
 			roi_bg_.width = source_window_->imagewidget_->roi_fg_.width;
 			roi_bg_.height = source_window_->imagewidget_->roi_fg_.height;
 
-			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
 			qDebug() << "paste" << endl;
 			// QImage -> Mat
 			QImage image_bg = image_backup_->copy();
-			cv::Mat src_bg = QImage2cvMat(image_bg); //image_是拼接后的图片
+			cv::Mat src_bg = QImage2cvMat(image_bg); //image_是拼接后的图片，不能用
 			cv::Mat src_fg = QImage2cvMat(*source_window_->imagewidget_->image());
-			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
-			PIE pie(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_);
-			cv::Mat blend_result = pie.get_output_image_();
-			// Mat -> QImage
-			image_ = &Mat2QImage(blend_result);
 
+			if (source_window_->imagewidget_->solver_.info() != Success) {
+				qDebug() << "decomposition failed" << endl;
+			}
+			PIE pie(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
+			cv::Mat blend_result = pie.get_output_image_();
+
+			QImage result = Mat2QImage(blend_result);
+			*image_ = result;
 
 			is_pasting_ = false;
 			draw_status_ = kNone;
@@ -327,14 +333,14 @@ void ImageWidget::mouseReleaseEvent(QMouseEvent* mouseevent)
 			qDebug() << "paste" << endl;
 			// QImage -> Mat
 			QImage image_bg = image_backup_->copy();
-			cv::Mat src_bg = QImage2cvMat(image_bg) ; //image_是拼接后的图片
+			cv::Mat src_bg = QImage2cvMat(image_bg) ; //image_是拼接后的图片,不能用
 			cv::Mat src_fg = QImage2cvMat(*source_window_->imagewidget_->image());
 			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
-			PIEMixed pie(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_);
+			PIEMixed pie(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
 			cv::Mat blend_result = pie.get_output_image_();
 			// Mat -> QImage
-			image_ = &Mat2QImage(blend_result);
-
+			QImage result = Mat2QImage(blend_result);
+			*image_ = result;
 
 			is_pasting_ = false;
 			draw_status_ = kNone;
@@ -501,6 +507,7 @@ QImage ImageWidget::Mat2QImage(const cv::Mat& InputMat)
 
 {
 
+
 	cv::Mat TmpMat;
 
 	// convert the color space to RGB
@@ -517,15 +524,50 @@ QImage ImageWidget::Mat2QImage(const cv::Mat& InputMat)
 	}
 
 
-	// construct the QImage using the data of the mat, while do not copy the data
+	//construct the QImage using the data of the mat, while do not copy the data
 
-	QImage Result = QImage((const uchar*)(TmpMat.data), TmpMat.cols, TmpMat.rows,
+	QImage Result = QImage((const uchar*)(TmpMat.data), TmpMat.cols, TmpMat.rows, TmpMat.step, QImage::Format_RGB888);
 
-		QImage::Format_RGB888);
-
-	// deep copy the data from mat to QImage
+	 //deep copy the data from mat to QImage
 
 	Result.bits();
+	qDebug() << "width()" << Result.width() << "height" << Result.height() << endl;
 
 	return Result;
+
+}
+
+void ImageWidget::compute_coefficient_matrix()
+{
+	roi_fg_.x = point_start_.x();
+	roi_fg_.y = point_start_.y();
+	roi_fg_.width = point_end_.x() - point_start_.x();
+	roi_fg_.height = point_end_.y() - point_start_.y();
+
+	SparseMatrix<double> A_sparse(roi_fg_.width * roi_fg_.height, roi_fg_.width * roi_fg_.height);
+
+	for (int i = 0; i < roi_fg_.height; i++) { // 先行后列
+		for (int j = 0; j < roi_fg_.width; j++) {
+			int certain_row_in_A = i * roi_fg_.width + j; //代表了当前像素的序号
+			if (i == 0 || j == 0 || i == roi_fg_.height - 1 || j == roi_fg_.width - 1) { // 四周
+				A_sparse.insert(certain_row_in_A, certain_row_in_A) = 1;
+			}
+			else // 内部
+			{
+				A_sparse.insert(certain_row_in_A, certain_row_in_A) = -4;
+				A_sparse.insert(certain_row_in_A, certain_row_in_A - roi_fg_.width) = 1;
+				A_sparse.insert(certain_row_in_A, certain_row_in_A + roi_fg_.width) = 1;
+				A_sparse.insert(certain_row_in_A, certain_row_in_A - 1) = 1;
+				A_sparse.insert(certain_row_in_A, certain_row_in_A + 1) = 1;
+
+			}
+		}
+	}
+
+	solver_.compute(A_sparse);
+	if (solver_.info() != Success) {
+		qDebug() << "decomposition failed" << endl;
+	}
+
+	qDebug() << "Sparse matrix computed." << endl;
 }

@@ -3,6 +3,7 @@
 #include <PIE.h>
 #include <PIEMixed.h>
 #include <QImage>
+#include <vector>
 
 class ChildWindow;
 QT_BEGIN_NAMESPACE
@@ -36,6 +37,7 @@ public:
 	void set_source_window(ChildWindow* childwindow);
 	cv::Mat QImage2cvMat(QImage image);
 	QImage Mat2QImage(const cv::Mat& InputMat);
+	void compute_coefficient_matrix();
 
 protected:
 	void paintEvent(QPaintEvent *paintevent);
@@ -72,5 +74,7 @@ private:
 	bool						is_pasting_;
 	cv::Rect roi_bg_;
 	cv::Rect roi_fg_;
+
+	SparseLU<SparseMatrix<double>> solver_; // œ° Ë«ÛΩ‚∆˜
 };
 

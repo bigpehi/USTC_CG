@@ -15,7 +15,7 @@ using namespace Eigen;
 class PIEMixed {
 public:
 	PIEMixed();
-	PIEMixed(cv::Mat src_bg, cv::Mat src_fg, cv::Rect* roi_bg, cv::Rect* roi_fg);
+	PIEMixed(cv::Mat src_bg, cv::Mat src_fg, cv::Rect* roi_bg, cv::Rect* roi_fg, SparseLU<SparseMatrix<double>>* solver);
 	cv::Mat get_output_image_();
 
 private:
@@ -46,4 +46,6 @@ private:
 
 	cv::Rect* roi_bg_;
 	cv::Rect* roi_fg_;
+
+	SparseLU<SparseMatrix<double>>* solver_;
 };

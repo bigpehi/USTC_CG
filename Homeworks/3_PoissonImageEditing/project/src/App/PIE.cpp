@@ -5,7 +5,7 @@ PIE::PIE()
 {
 }
 
-PIE::PIE(cv::Mat src_bg, cv::Mat src_fg, cv::Rect* roi_bg, cv::Rect* roi_fg)
+PIE::PIE(cv::Mat src_bg, cv::Mat src_fg, cv::Rect* roi_bg, cv::Rect* roi_fg, SparseLU<SparseMatrix<double>>* solver)
 {
     cv::imwrite("./src_bg.jpg", src_bg); // 修改图片格式
     cv::imwrite("./src_fg.jpg", src_fg); // 修改图片格式
@@ -15,13 +15,10 @@ PIE::PIE(cv::Mat src_bg, cv::Mat src_fg, cv::Rect* roi_bg, cv::Rect* roi_fg)
     roi_fg_ = roi_fg;
     patch_ = src_fg(*roi_fg_).clone(); //将src_fg中对应的ROI进行提取并克隆（单独对克隆区域操作而不改变原src中对应的ROI图像）
 
-    // show
-    qDebug() << roi_bg_->x << "  " << roi_bg_->y << "  " << roi_bg_->width << "  " << roi_bg_->height << endl;
-    //cv::imshow("dg", src_bg_);
-    //cv::imshow("fg", src_fg_);
-    //cv::imshow("patch", patch_);
-    //cv::waitKey(0);
-    //cv::destroyAllWindows();
+    solver_ = solver;
+    if (solver->info() != Success) {
+        qDebug() << "decomposition failed" << endl;
+    }
 
     gradient_bg_x_ = cv::Mat::zeros(src_bg_.rows, src_bg_.cols, CV_8UC4);
     gradient_bg_y_ = cv::Mat::zeros(src_bg_.rows, src_bg_.cols, CV_8UC4);
@@ -142,8 +139,8 @@ void PIE::compute_divergence_()
 
 void PIE::compute_matrix_equation_()
 {
-    // 声明动态大小的系数矩阵，大小为N*N, N为roi中的点数
-    SparseMatrix<double> A_sparse(roi_bg_->width * roi_bg_->height, roi_bg_->width * roi_bg_->height);
+    //// 声明动态大小的系数矩阵，大小为N*N, N为roi中的点数
+    //SparseMatrix<double> A_sparse(roi_bg_->width * roi_bg_->height, roi_bg_->width * roi_bg_->height);
 
     VectorXd X_r(roi_bg_->width * roi_bg_->height);
     VectorXd X_g(roi_bg_->width * roi_bg_->height);
@@ -160,7 +157,7 @@ void PIE::compute_matrix_equation_()
         for (int j = 0; j < roi_bg_->width; j++) {
             int certain_row_in_A = i * roi_bg_->width + j; //代表了当前像素的序号
             if (i == 0 || j == 0 || i == roi_bg_->height - 1 || j == roi_bg_->width - 1) { // 四周
-                A_sparse.insert(certain_row_in_A, certain_row_in_A) = 1;
+                //A_sparse.insert(certain_row_in_A, certain_row_in_A) = 1;
 
                 // B向量该行元素的值应该为patch在该点的像素值，而不是散度，不然不符合约束条件
                 B_b(certain_row_in_A) = src_bg_.at<cv::Vec3b>(i + roi_bg_->y, j + roi_bg_->x)[0]; //B
@@ -170,13 +167,13 @@ void PIE::compute_matrix_equation_()
             }
             else // 内部
             {
-                A_sparse.insert(certain_row_in_A, certain_row_in_A) = -4;
-                A_sparse.insert(certain_row_in_A, certain_row_in_A - roi_bg_->width) = 1;
-                A_sparse.insert(certain_row_in_A, certain_row_in_A + roi_bg_->width) = 1;
-                A_sparse.insert(certain_row_in_A, certain_row_in_A - 1) = 1;
-                A_sparse.insert(certain_row_in_A, certain_row_in_A + 1) = 1;
+                //A_sparse.insert(certain_row_in_A, certain_row_in_A) = -4;
+                //A_sparse.insert(certain_row_in_A, certain_row_in_A - roi_bg_->width) = 1;
+                //A_sparse.insert(certain_row_in_A, certain_row_in_A + roi_bg_->width) = 1;
+                //A_sparse.insert(certain_row_in_A, certain_row_in_A - 1) = 1;
+                //A_sparse.insert(certain_row_in_A, certain_row_in_A + 1) = 1;
 
-                // 梯度融合，取同一位置bg和fg的更大的梯度
+
                 B_b(certain_row_in_A) = laplacian_fg_.at<cv::Vec3f>(i + roi_fg_->y, j + roi_fg_->x)[0]; //B
  
                 B_g(certain_row_in_A) = laplacian_fg_.at<cv::Vec3f>(i + roi_fg_->y, j + roi_fg_->x)[1]; //G
@@ -190,18 +187,14 @@ void PIE::compute_matrix_equation_()
 
 
     // 稀疏求解器
-    SparseLU<SparseMatrix<double> > solver;
-    solver.compute(A_sparse);
-    if (solver.info() != Success) {
+    //SparseLU<SparseMatrix<double> > solver;
+    //solver.compute(A_sparse);
+    if (solver_->info() != Success) {
         qDebug() << "decomposition failed" << endl;
     }
-    if (solver.info() != Success) {
-        qDebug() << "solving failed" << endl;
-    }
-
-    X_b = solver.solve(B_b);
-    X_g = solver.solve(B_g);
-    X_r = solver.solve(B_r);
+    X_b = solver_->solve(B_b);
+    X_g = solver_->solve(B_g);
+    X_r = solver_->solve(B_r);
     
 
     for (int i = 0; i < roi_bg_->height; i++) { // i在y轴上迭代
@@ -241,10 +234,10 @@ void PIE::compute_matrix_equation_()
         }
     }
 
-    cv::imshow("src_bg_", src_bg_);
-    cv::waitKey(0);
-    qDebug() << "show" << endl;
-    cv::destroyAllWindows();
+    //cv::imshow("src_bg_", src_bg_);
+    //cv::waitKey(0);
+    //qDebug() << "show" << endl;
+    //cv::destroyAllWindows();
 
 }
 
