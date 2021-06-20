@@ -39,6 +39,7 @@ private slots:
 	// Poisson Image Editing
 	void ChooseRect();							// Choose rectangle region
 	void Paste();								// Paste rect region to object image
+	void Paste_mix();								// Paste rect region to object image
 
 private:
 	void CreateActions();
@@ -70,6 +71,7 @@ private:
 	QAction						*action_choose_polygon_;
 	QAction						*action_copy_;
 	QAction						*action_paste_;
+	QAction						*action_paste_mix_;
 
 	QMdiArea					*mdi_area_;
 	QSignalMapper				*window_mapper_;

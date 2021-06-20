@@ -1,5 +1,8 @@
 #pragma once
 #include <QWidget>
+#include <PIE.h>
+#include <PIEMixed.h>
+#include <QImage>
 
 class ChildWindow;
 QT_BEGIN_NAMESPACE
@@ -10,7 +13,8 @@ QT_END_NAMESPACE
 enum DrawStatus
 {
 	kChoose, 
-	kPaste, 
+	kPaste,
+	kPaste_mix,
 	kNone
 };
 
@@ -27,8 +31,11 @@ public:
 	int ImageHeight();											// Height of image
 	void set_draw_status_to_choose();
 	void set_draw_status_to_paste();
+	void set_draw_status_to_paste_mix();
 	QImage* image();
 	void set_source_window(ChildWindow* childwindow);
+	cv::Mat QImage2cvMat(QImage image);
+	QImage Mat2QImage(const cv::Mat& InputMat);
 
 protected:
 	void paintEvent(QPaintEvent *paintevent);
@@ -63,5 +70,7 @@ private:
 	DrawStatus					draw_status_;					// Enum type of draw status
 	bool						is_choosing_;
 	bool						is_pasting_;
+	cv::Rect roi_bg_;
+	cv::Rect roi_fg_;
 };
 

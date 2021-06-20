@@ -75,6 +75,9 @@ void MainWindow::CreateActions()
 
 	action_paste_ = new QAction(tr("Paste"), this);
 	connect(action_paste_, SIGNAL(triggered()), this, SLOT(Paste()));
+
+	action_paste_mix_ = new QAction(tr("Paste_Mix"), this);
+	connect(action_paste_mix_, SIGNAL(triggered()), this, SLOT(Paste_mix()));
 }
 
 void MainWindow::CreateMenus()
@@ -114,6 +117,7 @@ void MainWindow::CreateToolBars()
 	toolbar_file_->addSeparator();
 	toolbar_file_->addAction(action_choose_polygon_);
 	toolbar_file_->addAction(action_paste_);
+	toolbar_file_->addAction(action_paste_mix_);
 }
 
 void MainWindow::CreateStatusBar()
@@ -242,6 +246,16 @@ void MainWindow::Paste()
 	if (!window)
 		return;
 	window->imagewidget_->set_draw_status_to_paste();
+	window->imagewidget_->set_source_window(child_source_);
+}
+
+void MainWindow::Paste_mix()
+{
+	// Paste image rect region to object image
+	ChildWindow* window = GetChildWindow();
+	if (!window)
+		return;
+	window->imagewidget_->set_draw_status_to_paste_mix();
 	window->imagewidget_->set_source_window(child_source_);
 }
 
