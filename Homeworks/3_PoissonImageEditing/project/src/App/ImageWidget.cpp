@@ -249,7 +249,7 @@ void ImageWidget::mouseMoveEvent(QMouseEvent* mouseevent)
 			if (source_window_->imagewidget_->solver_.info() != Success) {
 				qDebug() << "decomposition failed" << endl;
 			}
-			PIE pieMixed(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
+			PIEMixed pieMixed(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
 			cv::Mat blend_result = pieMixed.get_output_image_();
 
 			QImage result = Mat2QImage(blend_result);
@@ -336,8 +336,8 @@ void ImageWidget::mouseReleaseEvent(QMouseEvent* mouseevent)
 			cv::Mat src_bg = QImage2cvMat(image_bg) ; //image_是拼接后的图片,不能用
 			cv::Mat src_fg = QImage2cvMat(*source_window_->imagewidget_->image());
 			//qDebug() << source_window_->imagewidget_->roi_.x << "  " << source_window_->imagewidget_->roi_.y << "  " << source_window_->imagewidget_->roi_.width << "  " << source_window_->imagewidget_->roi_.height << endl;
-			PIEMixed pie(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
-			cv::Mat blend_result = pie.get_output_image_();
+			PIEMixed pieMixed(src_bg, src_fg, &roi_bg_, &source_window_->imagewidget_->roi_fg_, &source_window_->imagewidget_->solver_);
+			cv::Mat blend_result = pieMixed.get_output_image_();
 			// Mat -> QImage
 			QImage result = Mat2QImage(blend_result);
 			*image_ = result;

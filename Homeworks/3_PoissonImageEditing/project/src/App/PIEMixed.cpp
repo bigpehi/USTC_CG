@@ -202,9 +202,9 @@ void PIEMixed::compute_matrix_equation_()
         }
     }
 
-    cv::imshow("src_bg_", src_bg_);
-    cv::waitKey(0);
-    qDebug() << "show" << endl;
-    cv::destroyAllWindows();
+    //cv::imshow("src_bg_", src_bg_);
+    //cv::waitKey(0);
+    //qDebug() << "show" << endl;
+    //cv::destroyAllWindows();
 
 }
