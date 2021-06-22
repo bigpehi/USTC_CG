@@ -3,6 +3,7 @@
 #include <Basic/HeapObj.h>
 #include <UHEMesh/HEMesh.h>
 #include <UGM/UGM>
+#include <qdebug.h>
 
 namespace Ubpa {
 	class TriMesh;
@@ -29,6 +30,7 @@ namespace Ubpa {
 		// kernel part of the algorithm
 		void Minimize();
 
+
 	private:
 		class V;
 		class E;
@@ -39,10 +41,14 @@ namespace Ubpa {
 		};
 		class E : public TEdge<V, E, P> { };
 		class P :public TPolygon<V, E, P> { };
+
+
+
 	private:
 		friend class Paramaterize;
 
 		Ptr<TriMesh> triMesh;
 		const Ptr<HEMesh<V>> heMesh; // vertice order is same with triMesh
+
 	};
 }

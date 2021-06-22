@@ -361,7 +361,7 @@ void Attribute::ComponentVisitor::ImplVisit(Ptr<TriMesh> mesh) {
 	grid->AddButton("Minimize Surface", [mesh, pOGLW = attr->pOGLW]() {
 		auto minSurf = MinSurf::New(mesh);
 		minSurf->Run();
-		pOGLW->DirtyVAO(mesh);
+		pOGLW->DirtyVAO(mesh);  // 告诉OpenGL目标更新了
 	});
 
 	grid->AddButton("Paramaterize", [mesh, pOGLW = attr->pOGLW]() {
