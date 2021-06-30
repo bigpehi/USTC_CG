@@ -1,4 +1,4 @@
-#include <Engine/MeshEdit/Paramaterize.h>
+#include <Engine/MeshEdit/ParamaterizeUniformSquare.h>
 
 #include <Engine/MeshEdit/MinSurf.h>
 
@@ -8,18 +8,18 @@ using namespace Ubpa;
 
 using namespace std;
 
-Paramaterize::Paramaterize(Ptr<TriMesh> triMesh)
+ParamaterizeUniformSquare::ParamaterizeUniformSquare(Ptr<TriMesh> triMesh)
 	: heMesh(make_shared<HEMesh<V>>())
 {
 	Init(triMesh);
 }
 
-void Paramaterize::Clear() {
+void ParamaterizeUniformSquare::Clear() {
 	heMesh->Clear();
 	triMesh = nullptr;
 }
 
-bool Paramaterize::Init(Ptr<TriMesh> triMesh) {
+bool ParamaterizeUniformSquare::Init(Ptr<TriMesh> triMesh) {
 	Clear();
 
 	if (triMesh == nullptr)
@@ -57,7 +57,7 @@ bool Paramaterize::Init(Ptr<TriMesh> triMesh) {
 	return true;
 }
 
-bool Paramaterize::Run() {
+bool ParamaterizeUniformSquare::Run() {
 	if (heMesh->IsEmpty() || !triMesh) {
 		printf("ERROR::MinSurf::Run\n"
 			"\t""heMesh->IsEmpty() || !triMesh\n");
@@ -69,23 +69,34 @@ bool Paramaterize::Run() {
 	// half-edge structure -> triangle mesh
 	size_t nV = heMesh->NumVertices();
 	size_t nF = heMesh->NumPolygons();
+
 	vector<pointf3> positions;
 	vector<unsigned> indice;
+	vector<pointf2> texcoords;
+
 	positions.reserve(nV);
 	indice.reserve(3 * nF);
-	for (auto v : heMesh->Vertices())
+	texcoords.reserve(nV);
+
+	for (auto v : heMesh->Vertices()) {
 		positions.push_back(v->pos.cast_to<pointf3>());
+		texcoords.push_back(v->pos.cast_to<pointf2>());
+	}
+
 	for (auto f : heMesh->Polygons()) { // f is triangle
 		for (auto v : f->BoundaryVertice()) // vertices of the triangle
 			indice.push_back(static_cast<unsigned>(heMesh->Index(v)));
 	}
-
 	triMesh->Init(indice, positions);
+	if (texture_flag)
+		triMesh->Update(texcoords);
+	//this->triMesh->Update(texCoor);
+
 
 	return true;
 }
 
-void Ubpa::Paramaterize::Parameterization()
+void Ubpa::ParamaterizeUniformSquare::Parameterization()
 {
 	// step1：检测边界
 	// step2：固定边界点
@@ -97,11 +108,11 @@ void Ubpa::Paramaterize::Parameterization()
 	// step5：更新顶点坐标
 	Update_vetecies();
 	// step6：链接纹理图像，更新显示（贴图）
-	Add_texture();
+	//Add_texture();
 }
 
 
-void Ubpa::Paramaterize::Fix_boundary()
+void Ubpa::ParamaterizeUniformSquare::Fix_boundary()
 {
 	double boundary_vertecies_num = heMesh->Boundaries()[0].size();
 
@@ -167,7 +178,7 @@ void Ubpa::Paramaterize::Fix_boundary()
 }
 
 
-void Ubpa::Paramaterize::Create_equation()
+void Ubpa::ParamaterizeUniformSquare::Create_equation()
 {
 	size_t nV = heMesh->NumVertices(); // mesh的点数
 	A_sparse.resize(nV, nV);
@@ -187,7 +198,7 @@ void Ubpa::Paramaterize::Create_equation()
 	}
 }
 
-void Ubpa::Paramaterize::Solve_equation()
+void Ubpa::ParamaterizeUniformSquare::Solve_equation()
 {
 	solver.compute(A_sparse);
 	if (solver.info() != Success) {
@@ -200,11 +211,20 @@ void Ubpa::Paramaterize::Solve_equation()
 
 }
 
-void Ubpa::Paramaterize::Update_vetecies()
+void Ubpa::ParamaterizeUniformSquare::Update_vetecies()
 {
 	size_t nV = heMesh->NumVertices(); // mesh的点数
+
+	X_x_backup.resize(nV);
+	X_y_backup.resize(nV);
+	X_z_backup.resize(nV);
+
 	for (size_t i = 0; i < nV; i++) {
 		V* v_i = heMesh->Vertices().at(i);
+
+		X_x_backup(i) = heMesh->Vertices()[i]->pos.at(0);
+		X_y_backup(i) = heMesh->Vertices()[i]->pos.at(1);
+		X_z_backup(i) = heMesh->Vertices()[i]->pos.at(2);
 
 		heMesh->Vertices()[i]->pos.at(0) = X_x(i);
 		heMesh->Vertices()[i]->pos.at(1) = X_y(i);
@@ -213,6 +233,14 @@ void Ubpa::Paramaterize::Update_vetecies()
 	}
 }
 
-void Ubpa::Paramaterize::Add_texture()
+void Ubpa::ParamaterizeUniformSquare::Add_texture()
 {
+	texture_flag = true;
+	size_t nV = heMesh->NumVertices(); // mesh的点数
+	for (size_t i = 0; i < nV; i++) {
+		heMesh->Vertices()[i]->pos.at(0) = X_x_backup(i); // 索引错
+		heMesh->Vertices()[i]->pos.at(1) = X_y_backup(i);
+		heMesh->Vertices()[i]->pos.at(2) = X_z_backup(i);
+
+	}
 }

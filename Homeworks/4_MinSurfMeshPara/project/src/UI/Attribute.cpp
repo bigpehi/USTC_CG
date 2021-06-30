@@ -5,6 +5,13 @@
 #include <Engine/MeshEdit/Glue.h>
 #include <Engine/MeshEdit/MinSurf.h>
 #include <Engine/MeshEdit/Paramaterize.h>
+#include <Engine/MeshEdit/ParamaterizeUniformSquare.h>
+#include <Engine/MeshEdit/ParameterizeUniformCircle.h>
+#include <Engine/MeshEdit/ParameterizeCotangentSquare.h>
+#include <Engine/MeshEdit/ParameterizeCotangentCircle.h>
+#include <Engine/MeshEdit/ARAP.h>
+
+
 #include <Engine/MeshEdit/IsotropicRemeshing.h>
 #include <Engine/MeshEdit/ShortestPath.h>
 #include <Engine/MeshEdit/MST.h>
@@ -364,12 +371,54 @@ void Attribute::ComponentVisitor::ImplVisit(Ptr<TriMesh> mesh) {
 		pOGLW->DirtyVAO(mesh);  // 告诉OpenGL目标更新了
 	});
 
-	grid->AddButton("Paramaterize", [mesh, pOGLW = attr->pOGLW]() {
-		auto paramaterize = Paramaterize::New(mesh);
-		if (paramaterize->Run())
-			printf("Paramaterize done\n");
+	grid->AddButton("ParamaterizeUniformSquare", [mesh, pOGLW = attr->pOGLW]() {
+		auto paramaterizeUniformSquare = ParamaterizeUniformSquare::New(mesh);
+		if (paramaterizeUniformSquare->Run()) {
+			printf("paramaterizeUniformSquare done\n");
+			//paramaterizeUniformSquare->Add_texture();
+		}
+			
+
 		pOGLW->DirtyVAO(mesh);
 	});
+
+	grid->AddButton("ParamaterizeUniformCircle", [mesh, pOGLW = attr->pOGLW]() {
+		auto parameterizeUniformCircle = ParameterizeUniformCircle::New(mesh);
+		if (parameterizeUniformCircle->Run()) {
+			printf("paramaterizeUniformSquare done\n");
+			//parameterizeUniformCircle->Add_texture();
+		}
+		pOGLW->DirtyVAO(mesh);
+	});
+
+	grid->AddButton("ParameterizeCotangentSquare", [mesh, pOGLW = attr->pOGLW]() {
+		auto parameterizeCotangentSquare = ParameterizeCotangentSquare::New(mesh);
+		//parameterizeCotangentSquare->Add_texture();
+		if (parameterizeCotangentSquare->Run()) {
+			printf("paramaterizeUniformSquare done\n");
+			//parameterizeCotangentSquare->Add_texture();
+		}
+		pOGLW->DirtyVAO(mesh);
+	});
+
+	grid->AddButton("ParameterizeCotangentCircle", [mesh, pOGLW = attr->pOGLW]() {
+		auto parameterizeCotangentCircle = ParameterizeCotangentCircle::New(mesh);
+		if (parameterizeCotangentCircle->Run()) {
+			printf("paramaterizeUniformSquare done\n");
+			//parameterizeCotangentCircle->Add_texture();
+		}
+		pOGLW->DirtyVAO(mesh);
+	});
+
+	grid->AddButton("ARAP", [mesh, pOGLW = attr->pOGLW]() {
+		auto arap = ARAP::New(mesh);
+		arap->Add_texture();
+		if (arap->Run()) {
+			printf("arap done\n");
+		}
+		pOGLW->DirtyVAO(mesh);
+	});
+
 
 	grid->AddButton("Isotropic Remeshing", [mesh, pOGLW = attr->pOGLW]() {
 		printf("[Isotropic Remeshing] start\n");

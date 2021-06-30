@@ -12,12 +12,12 @@ namespace Ubpa {
 	class MinSurf;
 
 	// mesh boundary == 1
-	class Paramaterize : public HeapObj {
+	class ParameterizeCotangentSquare : public HeapObj {
 	public:
-		Paramaterize(Ptr<TriMesh> triMesh);
+		ParameterizeCotangentSquare(Ptr<TriMesh> triMesh);
 	public:
-		static const Ptr<Paramaterize> New(Ptr<TriMesh> triMesh) {
-			return Ubpa::New<Paramaterize>(triMesh);
+		static const Ptr<ParameterizeCotangentSquare> New(Ptr<TriMesh> triMesh) {
+			return Ubpa::New<ParameterizeCotangentSquare>(triMesh);
 		}
 	public:
 		void Clear();
@@ -50,14 +50,19 @@ namespace Ubpa {
 
 		SparseMatrix<double> A_sparse;
 		SparseLU<SparseMatrix<double>> solver;
-		VectorXd B_x; 
+		VectorXd B_x;
 		VectorXd B_y;
 		VectorXd B_z;
-		VectorXd X_x; 
-		VectorXd X_y; 
-		VectorXd X_z; 
+		VectorXd X_x;
+		VectorXd X_y;
+		VectorXd X_z;
+
+		VectorXd X_x_backup;
+		VectorXd X_y_backup;
+		VectorXd X_z_backup;
 
 		int* boundary_indexes;
 
+		bool texture_flag;
 	};
 }
