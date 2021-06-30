@@ -1,4 +1,4 @@
-#include <Engine/MeshEdit/ARAP.h>
+ï»¿#include <Engine/MeshEdit/ARAP.h>
 #include <Engine/MeshEdit/CParameterize.h>
 #include <Engine/Primitive/TriMesh.h>
 #include <assert.h>
@@ -28,10 +28,8 @@ void Ubpa::ARAP::Clear()
 bool Ubpa::ARAP::Init(Ptr<TriMesh> triMesh)
 {
 	Clear();
-
 	if (triMesh == nullptr)
 		return true;
-
 	if (triMesh->GetType() == TriMesh::INVALID) {
 		printf("ERROR::ARAP::Init:\n"
 			"\t""trimesh is invalid\n");
@@ -41,8 +39,7 @@ bool Ubpa::ARAP::Init(Ptr<TriMesh> triMesh)
 	this->nT = triMesh->GetTriangles().size();
 	this->nV = triMesh->GetPositions().size();
 
-
-	// init half-edge structure ¶ÔÏó³õÊ¼»¯Ê¹ÓÃµÄÊÇÈı½ÇÃæÆ¬£¬ÕâÀï½«¸ÃÈı½ÇÃæÆ¬×ª»»Îª°ë±ß½á¹¹
+	// step1: init half-edge structure
 	vector<vector<size_t>> triangles;
 	triangles.reserve(triMesh->GetTriangles().size());
 	for (auto triangle : triMesh->GetTriangles())
@@ -55,63 +52,25 @@ bool Ubpa::ARAP::Init(Ptr<TriMesh> triMesh)
 		heMesh->Clear();
 		return false;
 	}
-	// triangle mesh's positions ->  half-edge structure's positions 
 	for (int i = 0; i < this->nV; i++) {
 		auto v = heMesh->Vertices().at(i);
 		v->pos = triMesh->GetPositions()[i].cast_to<vecf3>();
 	}
 
-
-	// ¹Ì¶¨±ß½ç²ÎÊı»¯Ö®Ç°ĞèÒª½«Ô­Ê¼Íø¸ñ±¸·İÆğÀ´
-	x_backup.resize(this->nV);
-	y_backup.resize(this->nV);
-	z_backup.resize(this->nV);
-	for (size_t i = 0; i < this->nV; i++) {
-		V* v_i = heMesh->Vertices().at(i);
-		x_backup(i) = heMesh->Vertices()[i]->pos.at(0);
-		//cout << x_backup(i) << "	";
-		y_backup(i) = heMesh->Vertices()[i]->pos.at(1);
-		//cout << y_backup(i) << "	";
-		z_backup(i) = heMesh->Vertices()[i]->pos.at(2);
-		//cout << y_backup(i) << "	" << endl;
-	}
-
 	this->triMesh = triMesh;
 
-	// ³õÊ¼»¯ points2d ºÍ cotan value
+	// step2: initializing the points2d and cotan 
+	// (locally coordinates and cotangent of every angle for every triangle)
 	CongruentMapping2D();
 
-	// ÏÈ½øĞĞ¹Ì¶¨±ß½çµÄ²ÎÊı»¯£¬´Ë²½Öè»á¸Ä±ätrimeshºÍhemesh
+	// step3: locally parameterization with boundry
 	auto parameterizeUniformCircle = ParameterizeUniformCircle::New(triMesh);
 	if (parameterizeUniformCircle->Run()) {
 		printf("paramaterizeUniformSquare done\n");
 	}
 
-
-	
-	///////////// test module: ²é¿´ËùÓĞµã×ø±ê /////////////
-	if (false)
-	{
-		cout << endl << "heMesh:" << endl;
-		for (size_t i = 0; i < this->nV; i++)
-		{
-			cout << "x:" << heMesh->Vertices()[i]->pos[0] << "	y:" << heMesh->Vertices()[i]->pos[1] << "	z:" << heMesh->Vertices()[i]->pos[2] << endl;
-		}
-		cout << endl << "trimesh:" << endl;
-		for (size_t i = 0; i < this->nV; i++)
-		{
-			auto pos = triMesh->GetPositions()[i].cast_to<vecf3>();
-			cout << "x:" << pos[0] << "	y:" << pos[1] << "	z:" << pos[2] << endl;
-		}
-		int polygons_num = 0;
-		for (auto triangle : this->heMesh->Polygons())
-			polygons_num++;
-		cout << "hemesh_polygons_num:" << polygons_num << endl;
-		cout << "trimesh_polygons_num:" << this->nT << endl;
-	}
-	//////////////////////////////////////////////////////
-
-	// Ñ¡¶¨two anchor vertexes, Ïû³ı½á¹ûµÄĞı×ªºÍÆ½ÒÆ(ÕâÀïÖ±½ÓÓÃindex = 1 & 2¿É²»¿ÉÒÔ£¿)
+	// step4: pick two anchor vertexes, 
+	// which can (a) remove ratation and displacement of the result (b) avoid  degradation solution.
 	auto triangle = heMesh->Polygons().back();
 	auto v1 = triangle->BoundaryVertice()[0];
 	anchor_v1_idx = heMesh->Index(v1);
@@ -120,50 +79,9 @@ bool Ubpa::ARAP::Init(Ptr<TriMesh> triMesh)
 	anchor_pos1 = pointf2(0, 0);
 	anchor_pos2 = pointf2(2, 2);
 
-
-
-	///////////// test module: ²é¿´Èı½ÇĞÎ¾Ö²¿×ø±êÒÔ¼°½Ç¶È /////////////
-	if(false)
-	{
-		cout << endl << "points2d:" << endl;
-		triangle_points.clear();	// remember to clear
-		for (auto triangle : heMesh->Polygons())
-		{
-			if (triangle != nullptr)
-			{
-				this->triangle_points.push_back(triangle->BoundaryVertice());
-			}
-		}
-		for (size_t t = 0; t < this->nT; t++)
-		{
-			auto vec_u = triangle_points[t];
-			auto mapped_u = points2d[t];
-			for (int i = 0; i < 3; i++)
-			{
-				V* u0 = vec_u[i];
-				pointf3 x0 = mapped_u[u0];
-				cout << "x0:" << x0 << endl;
-				cout << "cot2d:" << cot2d[t][u0]<<endl;
-			}
-		}
-	}
-	//////////////////////////////////////////////////////
-
-	// Éú³É²¢Ô¤·Ö½âÏµÊı¾ØÕóA£¬¸Ã¾ØÕóÔÚµü´ú¹ı³ÌÖĞ±£³Ö²»±ä£¬¿ÉÒÔ½öÔ¤·Ö½âÒ»´Î
+	// step5: generate and compute the coefficient matrix A, 
+	// which is constant in all iterations, so it can be generated and computed only once.
 	Generate_and_compute_A();
-
-	///////////// test module: ²é¿´ÏµÊı¾ØÕóÊÇ·ñÕıÈ· /////////////
-	if (false)
-	{
-		cout << endl;
-		for (int k = 0; k < A_sparse.outerSize(); ++k) {
-			for (SparseMatrix<double>::InnerIterator it(A_sparse, k); it; ++it)
-				cout<<it.value()<<"	"; // ÔªËØÖµ
-			cout << endl;
-		}
-
-	}
-	////////////////////////////////////////////////////////////
 
 	return true;
 }
@@ -176,7 +94,8 @@ bool Ubpa::ARAP::Run()
 		return false;
 	}
 
-	ARAP_Pipeline();
+	error = -1;
+	ARAP_Pipeline(); // kernel iteration of the ARAP algorithm
 
 	// Finally, half-edge structure -> triangle mesh, end. 
 	vector<pointf3> positions;
@@ -216,8 +135,8 @@ void Ubpa::ARAP::Add_texture()
 void Ubpa::ARAP::ARAP_Pipeline()
 {
 
-	// Í£Ö¹Ìõ¼ş
-	size_t iter_n = 5;
+	// stop condition
+	size_t iter_n = 2;
 
 	for (int i = 0; i < iter_n; i++)
 	{
@@ -225,29 +144,15 @@ void Ubpa::ARAP::ARAP_Pipeline()
 		Global_Phase();
 		cout << "iter:" << i << " error: " << error << endl;
 	}
-	if (texture_flag) {
-		for (size_t i = 0; i < this->nV; i++) {
-			heMesh->Vertices()[i]->pos.at(0) = x_backup(i);
-			//cout << x_backup(i) << "	";
-			heMesh->Vertices()[i]->pos.at(1) = y_backup(i);
-			//cout << y_backup(i) << "	";
-			heMesh->Vertices()[i]->pos.at(2) = z_backup(i);
-			//cout << z_backup(i) << "	" << endl;
-		}
-	}
 }
 
 void Ubpa::ARAP::Global_Phase()
 {
-	// first, set b
+	// step1: set b
 	setb(anchor_v1_idx, anchor_pos1, anchor_v2_idx, anchor_pos2);
 
 
-
-
-	error = -1;
 	// Then solve the equation
-	//ARAP_solution = solver.solve(A_sparse.transpose() * ARAP_mat_b);
 	ARAP_solution = solver.solve(ARAP_mat_b);
 
 	this->texCoor.clear();
@@ -272,7 +177,7 @@ void Ubpa::ARAP::Global_Phase()
 }
 
 
-void Ubpa::ARAP::Local_Phase() // Ê¹ÓÃSVD·Ö½âÇó½â×îÓÅµÄLt
+void Ubpa::ARAP::Local_Phase() // ä½¿ç”¨SVDåˆ†è§£æ±‚è§£æœ€ä¼˜çš„Lt
 {
 	// Get newest u per iteration ,
 	triangle_points.clear();	// remember to clear
@@ -284,8 +189,8 @@ void Ubpa::ARAP::Local_Phase() // Ê¹ÓÃSVD·Ö½âÇó½â×îÓÅµÄLt
 		}
 	}
 
-	// ¹¹ÔìSt(u)
-	Lt_array.clear(); // ºóÃæ¸üĞÂLt
+	// æ„é€ St(u)
+	Lt_array.clear(); // åé¢æ›´æ–°Lt
 	for (size_t t = 0; t < this->nT; t++)
 	{
 		auto vec_u = triangle_points[t];
@@ -311,42 +216,11 @@ void Ubpa::ARAP::Local_Phase() // Ê¹ÓÃSVD·Ö½âÇó½â×îÓÅµÄLt
 			double cot = getCotan(t, vec_u[(i + 2) % 3]);
 
 			St += cot * delta_u * delta_x.transpose();
-
-			///////////// test module: ÊÖËãÑéÖ¤ u ºÍ x £¬ St/////////////
-			//{
-			//	cout << endl <<"local phase	" << "t = " << t << " , " << "i = " << i << endl;
-			//	cout << "cot: " << cot << endl;
-			//	cout << "u: (" << u0->pos[0]<<" , " << u0->pos[1]<<")" << "	" << "(" << u1->pos[0] << " , " << u1->pos[1] << ")" << endl;
-			//	cout << "x: (" << x0[0] << " , " << x0[1] << ")" << "	" << "(" << x1[0] << " , " << x1[1] << ")" << endl;
-			//	cout << "St:" << endl;
-			//	for (int j = 0; j < St.cols(); ++j) // ±éÀúÁĞ
-			//	{
-			//		for (int i = 0; i < St.rows(); ++i) // ±éÀúĞĞ
-			//			cout << St(i, j) << "	";
-			//		cout << endl;
-			//	}
-			//	cout << endl;
-			//}
-			////////////////////////////////////////////////////////////
-
 		}
 
 		// Do SVD Composition on St
 		JacobiSVD<MatrixXd> svd(St, ComputeThinU | ComputeThinV);
 		Matrix2d Lt = svd.matrixU() * svd.matrixV().transpose(); // Lt = U * V^T
-
-		///////////// test module: ÊÖËãÑéÖ¤ u ºÍ x £¬ St/////////////
-		//{
-		//	cout << "Lt:" << endl;
-		//	for (int j = 0; j < Lt.cols(); ++j) // ±éÀúÁĞ
-		//	{
-		//		for (int i = 0; i < Lt.rows(); ++i) // ±éÀúĞĞ
-		//			cout << Lt(i, j) << "	";
-		//		cout << endl;
-		//	}
-		//	cout << endl;
-		//}
-		////////////////////////////////////////////////////////////
 
 		Lt_array.push_back(Lt);
 
@@ -543,11 +417,6 @@ void ARAP::setb(size_t idx1, pointf2 pos1, size_t idx2, pointf2 pos2)
 					delta_x <<
 						mapped_v[v][0] - mapped_v[adj_v][0],
 						mapped_v[v][1] - mapped_v[adj_v][1];
-					/*cout << "cot1:" << cot1 << endl;
-					cout << "mapped_v[v]:" << mapped_v[v][0] <<"," << mapped_v[v][1] << endl;
-					cout << "mapped_[adj_v]:" << mapped_v[adj_v][0] << "," << mapped_v[adj_v][1] << endl;
-					cout << "cot1 * Lt * delta_x:" << cot1 * Lt * delta_x << endl;
-					cout << endl;*/
 
 					b += cot1 * Lt * delta_x;
 				}
@@ -567,12 +436,6 @@ void ARAP::setb(size_t idx1, pointf2 pos1, size_t idx2, pointf2 pos2)
 					delta_x <<
 						mapped_v[v][0] - mapped_v[adj_v][0],
 						mapped_v[v][1] - mapped_v[adj_v][1];
-
-					/*cout << "cot2:" << cot2 << endl;
-					cout << "mapped_v[v]:" << mapped_v[v][0] << "," << mapped_v[v][1] << endl;
-					cout << "mapped_v[adj_v]:" << mapped_v[adj_v][0] << "," << mapped_v[adj_v][1] << endl;
-					cout << "cot2 * Lt * delta_x:" << cot2 * Lt * delta_x << endl;
-					cout << endl;*/
 					b += cot2 * Lt * delta_x;
 				}
 			}

@@ -412,7 +412,7 @@ void Attribute::ComponentVisitor::ImplVisit(Ptr<TriMesh> mesh) {
 
 	grid->AddButton("ARAP", [mesh, pOGLW = attr->pOGLW]() {
 		auto arap = ARAP::New(mesh);
-		arap->Add_texture();
+		//arap->Add_texture();
 		if (arap->Run()) {
 			printf("arap done\n");
 		}

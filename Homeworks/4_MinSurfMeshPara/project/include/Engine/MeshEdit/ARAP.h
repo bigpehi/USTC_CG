@@ -1,6 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 #include <Engine/MeshEdit/ParameterizeUniformCircle.h>
+#include <Engine/MeshEdit/ParamaterizeUniformSquare.h>
+#include <Engine/MeshEdit/ParameterizeCotangentSquare.h>
 #include <Engine/MeshEdit/CParameterize.h>
 #include <Basic/HeapObj.h>
 #include <UHEMesh/HEMesh.h>
@@ -65,13 +67,8 @@ namespace Ubpa {
 
 		Ptr<TriMesh> triMesh;
 		const Ptr<HEMesh<V>> heMesh; // vertice order is same with triMesh
-		
-		// ±¸·İÔ­Ê¼Íø¸ñµã
-		VectorXd x_backup;
-		VectorXd y_backup;
-		VectorXd z_backup;
 
-		// point2D ÊÇÒ»¸övector£¬ÆäÖĞ°üº¬nV¸ömap£¬Ã¿¸ömap±íÊ¾µÚi¸öÈı½ÇĞÎµÄÈı¸öµã¶ÔÓ¦µÄ¾Ö²¿×ø±ê£¬¾Ö²¿×ø±êµÄ×îºóÒ»Î»Îª0
+		// point2D æ˜¯ä¸€ä¸ªvectorï¼Œå…¶ä¸­åŒ…å«nVä¸ªmapï¼Œæ¯ä¸ªmapè¡¨ç¤ºç¬¬iä¸ªä¸‰è§’å½¢çš„ä¸‰ä¸ªç‚¹å¯¹åº”çš„å±€éƒ¨åæ ‡ï¼Œå±€éƒ¨åæ ‡çš„æœ€åä¸€ä½ä¸º0
 		std::vector<std::map<V*, pointf3>> points2d; // 2d points mapped from 3D
 		std::vector<std::map<V*, double>> cot2d; // cotan value of origin 3D mesh
 
@@ -85,7 +82,7 @@ namespace Ubpa {
 
 
 		std::vector<Matrix2d> Lt_array;
-		std::vector<std::vector<V*>> triangle_points;  // ±£´æ×îĞÂµÄu
+		std::vector<std::vector<V*>> triangle_points;  // ä¿å­˜æœ€æ–°çš„u
 
 
 		bool texture_flag;
