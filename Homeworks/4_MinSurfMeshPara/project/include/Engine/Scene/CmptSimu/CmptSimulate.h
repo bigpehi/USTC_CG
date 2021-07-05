@@ -40,7 +40,8 @@ namespace Ubpa {
 	public:
 		void SetStiff(float stiff) { CastTo<MassSpring>(primitive)->GetSimu()->SetStiff(stiff); };
 		void SetFix(std::vector<unsigned>& fix) { fix_id = fix; };
-		void SetLeftFix() {CastTo<MassSpring>(primitive)->GetSimu()->SetLeftFix();};
+		void SetLeftFix() { CastTo<MassSpring>(primitive)->GetSimu()->SetLeftFix(); };
+		void Accelerate_on() {CastTo<MassSpring>(primitive)->GetSimu()->Accelerate_on();};
 
 	private:
 		std::vector<unsigned> fix_id;

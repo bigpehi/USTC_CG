@@ -201,6 +201,9 @@ void Attribute::ComponentVisitor::ImplVisit(Ptr<CmptSimulate> simulate) {
 	grid->AddButton("set x min fix", [simulate]() {
 		simulate->SetLeftFix();
 		});
+	grid->AddButton("Accerate-ON", [simulate]() {
+		simulate->Accelerate_on();
+		});
 }
 
 // -------------- Camera --------------

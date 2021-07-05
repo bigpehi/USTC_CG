@@ -22,13 +22,11 @@ namespace Ubpa {
 			edgelist = elist;
 			// 初始化position
 			this->positions.resize(plist.size());
-			this->positions_backup.resize(plist.size());
 			for (int i = 0; i < plist.size(); i++)
 			{
 				for (int j = 0; j < 3; j++)
 				{
 					this->positions[i][j] = plist[i][j];
-					this->positions_backup[i][j] = plist[i][j];
 				}
 			}
 		};
@@ -60,17 +58,20 @@ namespace Ubpa {
 		//void SetVelocity(const std::vector<pointf3>& v) { velocity = v; };
 
 		void SetLeftFix();
+		void Accelerate_on();
 
 
 	private:
 		// kernel part of the algorithm
 		void SimulateOnce();
-		//void Generate_equation();
-		//void Compute_equation();
 		void ImplicitEuler();
+		void Accelerate_liu();
+		void Generate_global_M2hL();
+		void Generate_global_coeffsMat();
+		void Generate_J();
 
 	private:
-		double h = 0.01f;  //步长
+		double h = 0.03f;  //步长
 		double stiff = 1;
 		std::vector<unsigned> fixed_id;  //fixed point id
 		double mass = 1;
@@ -82,17 +83,16 @@ namespace Ubpa {
 
 		//simulation data
 		std::vector<pointf3> positions; // 所有质点的位置
-		std::vector<pointf3> positions_backup; // 所有质点的位置
 		std::vector<pointf3> velocity;  // 所有质点的速度
-		std::vector<pointf3> velocity_backup;  // 所有质点的速度
 
+		// 加速算法
+		SparseMatrix<double> global_M2hL; // global阶段的矩阵，global_coeffs_Mat = (M +（h^2）* L)
+		SparseMatrix<double> global_coeffsMat; // global阶段的矩阵，global_coeffs_Mat = (M +（h^2）* L)
+		SparseLU<Eigen::SparseMatrix<double>> solver_coeffsMat;
+		SparseMatrix<double> J;
+		VectorXd b;
+		SparseMatrix<double> K;
 
-		/*SparseMatrix<double> coeffsM_nabla_gxk;*/
-		//SimplicialLDLT<SparseMatrix<double>> solver;
-		//VectorXd b_gx; // 方程组Ax = b 中的b，n*3
-		//Matrix<double, -1, 3> Y;
-		//VectorXd X_k;
-		//VectorXd X_kplus1;
-		/*Matrix<double, -1, 3> f_int;*/
+		bool is_accelrating;
 	};
 }
