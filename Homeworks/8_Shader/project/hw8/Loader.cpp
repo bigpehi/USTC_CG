@@ -4,9 +4,9 @@
 
 RawModel* Loader::loadToVao(float position[], int posSize, unsigned int indexData[], int indexSize)
 {
-	unsigned int vaoID = createVao(); // 创建一个VAO
-	bindIndexBuffer(indexData, indexSize); // 绑定IBO
-	storeDatatoAttriList(0, position, posSize); // 将此VAO保存到属性列表的0号位置上
+	unsigned int vaoID = createVao(); // 创建一个VAO并绑定到状态机
+	bindIndexBuffer(indexData, indexSize); // 绑定EBO
+	storeDatatoAttriList(0, position, posSize); // 通过position创建VBO，并保存到VAO属性列表的0号位置上
 	unbindVao(); // 解绑VAO
 	RawModel* tmpModel = new RawModel(vaoID, indexSize / sizeof(int)); //  indexSize / sizeof(int)表示顶点个数
 	models.push_back(tmpModel);

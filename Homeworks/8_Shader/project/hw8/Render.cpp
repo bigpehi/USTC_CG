@@ -20,7 +20,7 @@ void Render::onRender(RawModel*& model)
 	glBindVertexArray(model->getVaoID()); // 绑定VAO
 	glEnableVertexAttribArray(0); // 启用顶点属性，顶点属性默认是禁用的
 	//glDrawArrays(GL_TRIANGLES, 0, model->getVertexCnt()); // 使用当前激活的着色器，之前定义的顶点属性配置，和VBO的顶点数据（通过VAO间接绑定）来绘制图元
-	glDrawElements(GL_TRIANGLES, model->getVertexCnt(), GL_UNSIGNED_INT, 0);
-	glDisableVertexAttribArray(0);
-	glBindVertexArray(0);
+	glDrawElements(GL_TRIANGLES, model->getVertexCnt(), GL_UNSIGNED_INT, 0); // 使用当前激活的着色器，VAO进行绘制
+	glDisableVertexAttribArray(0); // 绘制完成，disable属性列表0
+	glBindVertexArray(0); // 绘制完成，解绑VAO
 }

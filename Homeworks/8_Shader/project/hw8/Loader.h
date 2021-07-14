@@ -17,7 +17,7 @@ private:
 	void storeDatatoAttriList(int idx, float positions[], int size); // 将数据存到属性列表(共16个)的对应位置
 
 private:
-	std::vector<class RawModel*> models;
+	std::vector<class RawModel*> models; // 每个rawmodel存储了一个VAO的ID和关联到的顶点个数
 	std::vector<unsigned int> vaos;
 	std::vector<unsigned int> vbos;
 };

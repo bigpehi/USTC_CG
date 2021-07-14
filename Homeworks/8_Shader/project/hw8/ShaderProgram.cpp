@@ -9,7 +9,7 @@ ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentS
 {
 	vertexFilePath = vertexShaderPath;
 	fragmentFilePath = fragmentShaderPath;
-	programId = createProgram(); // 将两个shader对象连接到一起
+	programId = createProgram(); // 编译，并将两个shader对象链接到一起
 	getAllUniformLocation();
 }
 
