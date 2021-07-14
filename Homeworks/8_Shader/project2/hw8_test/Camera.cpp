@@ -63,6 +63,8 @@ void Camera::ProcessMouseScroll(float yoffset)
         Zoom = 45.0f;
 }
 
+
+
 void Camera::updateCameraVectors()
 {
     // calculate the new Front vector

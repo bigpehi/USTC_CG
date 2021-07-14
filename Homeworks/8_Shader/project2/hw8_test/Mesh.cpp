@@ -41,7 +41,7 @@ void Mesh::Draw(Shader& shader)
 
     glBindVertexArray(VAO); // ∞Û∂®VAO
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0); // ªÊÕº
-    glBindVertexArray(0); // Ω‚∞ÛVAO
+    //glBindVertexArray(0); // Ω‚∞ÛVAO
 
     // always good practice to set everything back to defaults once configured.
     glActiveTexture(GL_TEXTURE0);
