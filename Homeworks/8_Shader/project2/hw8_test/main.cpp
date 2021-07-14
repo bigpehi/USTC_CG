@@ -33,7 +33,7 @@ int main()
     // load models
     //Model ourModel("../data/model/david/David328.obj");
     Model ourModel("../data/model/nanosuit/nanosuit.obj");
-    Cube lightCube(0.,20.,0.,1.,1.,1.);
+    Cube lightCube(0.,18.,5.,1.,1.,1.);
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -52,6 +52,9 @@ int main()
         // don't forget to enable shader before setting uniforms
         modelShader.use();
 
+        modelShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("lightPos", 0., 20., 0.);
+
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(mDisplay.camera.Zoom), (float)mDisplay.get_width() / (float)mDisplay.get_height(), 0.1f, 100.0f);
         glm::mat4 view = mDisplay.camera.GetViewMatrix();
@@ -69,6 +72,8 @@ int main()
         ourModel.Draw(modelShader);
 
         lightShader.use();
+
+
         lightShader.setMat4("projection", projection);
         lightShader.setMat4("view", view);
         glm::mat4 light = glm::mat4(1.0f);
