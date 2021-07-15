@@ -49,21 +49,29 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // don't forget to enable shader before setting uniforms
-        modelShader.use();
-
-        modelShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-        modelShader.setVec3("lightPos", 0., 20., 0.);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(mDisplay.camera.Zoom), (float)mDisplay.get_width() / (float)mDisplay.get_height(), 0.1f, 100.0f);
         glm::mat4 view = mDisplay.camera.GetViewMatrix();
+
+        lightShader.use();
+        lightShader.setMat4("projection", projection);
+        lightShader.setMat4("view", view);
+        glm::mat4 light = glm::mat4(1.0f);
+        light = glm::rotate(light, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0., 1, 0.));
+        lightShader.setMat4("model", light);
+        lightShader.setVec3("lightColor", glm::vec3(1.0)); // 设置方块颜色
+        lightCube.Draw(lightShader);
+
+        glm::vec4 light_center = glm::vec4(0.f, 18.f, 5.f, 1.f);
+        light_center = light * light_center;
+
+        // don't forget to enable shader before setting uniforms
+        modelShader.use();
+        modelShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("lightPos", light_center[0], light_center[1], light_center[2]);
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
-
-
-
-
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
@@ -71,15 +79,7 @@ int main()
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
 
-        lightShader.use();
 
-
-        lightShader.setMat4("projection", projection);
-        lightShader.setMat4("view", view);
-        glm::mat4 light = glm::mat4(1.0f);
-        lightShader.setMat4("model", light);
-        lightShader.setVec3("lightColor", glm::vec3(1.0)); // 设置方块颜色
-        lightCube.Draw(lightShader);
 
         mDisplay.update(); // 检查事件，交换颜色缓冲，处理按键
     }
