@@ -14,6 +14,7 @@ public:
 	Cube(float x = 0., float y = 0., float z = 0., float l = 1., float w = 1., float h = 1.);
 	void genVerteces();
 	void Draw(Shader& shader);
+	glm::vec3 getPosition();
 
 private:
 	glm::vec3 position;

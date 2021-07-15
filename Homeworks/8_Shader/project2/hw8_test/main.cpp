@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-
 #include "stb_image.h"
 
 #include <glm/glm.hpp>
@@ -29,11 +28,13 @@ int main()
     // build and compile shaders
     Shader modelShader("../Shader/model_loading.vs", "../Shader/model_loading.fs");
     Shader lightShader("../Shader/light_cube_loading.vs", "../Shader/light_cube_loading.fs");
+    Shader floorShader("../Shader/light_cube_loading.vs", "../Shader/light_cube_loading.fs");
 
     // load models
     //Model ourModel("../data/model/david/David328.obj");
     Model ourModel("../data/model/nanosuit/nanosuit.obj");
-    Cube lightCube(0.,18.,5.,1.,1.,1.);
+    Cube lightCube(0., 18., 5., 1., 1., 1.);
+    Cube floorCube(0.,-5.,0.,30.,1.,30.);
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -54,6 +55,16 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(mDisplay.camera.Zoom), (float)mDisplay.get_width() / (float)mDisplay.get_height(), 0.1f, 100.0f);
         glm::mat4 view = mDisplay.camera.GetViewMatrix();
 
+        // configuration of floor shader
+        floorShader.use();
+        floorShader.setMat4("projection", projection);
+        floorShader.setMat4("view", view);
+        glm::mat4 floor = glm::mat4(1.0f);
+        floorShader.setMat4("model", floor);
+        floorShader.setVec3("lightColor", glm::vec3(0.2)); // 设置方块颜色
+        floorCube.Draw(floorShader);
+
+        // configuration of light shader
         lightShader.use();
         lightShader.setMat4("projection", projection);
         lightShader.setMat4("view", view);
@@ -63,23 +74,21 @@ int main()
         lightShader.setVec3("lightColor", glm::vec3(1.0)); // 设置方块颜色
         lightCube.Draw(lightShader);
 
-        glm::vec4 light_center = glm::vec4(0.f, 18.f, 5.f, 1.f);
-        light_center = light * light_center;
+        // 计算光源位置
+        glm::vec4 lightPos = glm::vec4(lightCube.getPosition(), 1.f);
+        lightPos = light * lightPos;
 
-        // don't forget to enable shader before setting uniforms
+        // configuration of model shader
         modelShader.use();
         modelShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-        modelShader.setVec3("lightPos", light_center[0], light_center[1], light_center[2]);
+        modelShader.setVec3("lightPos", lightPos[0], lightPos[1], lightPos[2]);
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
-        // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
-
-
 
         mDisplay.update(); // 检查事件，交换颜色缓冲，处理按键
     }
