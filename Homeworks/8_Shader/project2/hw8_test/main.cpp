@@ -28,12 +28,12 @@ int main()
     // build and compile shaders
     Shader modelShader("../Shader/model_loading.vs", "../Shader/model_loading.fs");
     Shader lightShader("../Shader/light_cube_loading.vs", "../Shader/light_cube_loading.fs");
-    Shader floorShader("../Shader/light_cube_loading.vs", "../Shader/light_cube_loading.fs");
+    Shader floorShader("../Shader/general_cube.vs", "../Shader/general_cube.fs");
 
     // load models
     //Model ourModel("../data/model/david/David328.obj");
     Model ourModel("../data/model/nanosuit/nanosuit.obj");
-    Cube lightCube(0., 18., 5., 1., 1., 1.);
+    Cube lightCube(0., 18., 5., .3, .3, .3);
     Cube floorCube(0.,-5.,0.,30.,1.,30.);
 
     // draw in wireframe
@@ -55,14 +55,7 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(mDisplay.camera.Zoom), (float)mDisplay.get_width() / (float)mDisplay.get_height(), 0.1f, 100.0f);
         glm::mat4 view = mDisplay.camera.GetViewMatrix();
 
-        // configuration of floor shader
-        floorShader.use();
-        floorShader.setMat4("projection", projection);
-        floorShader.setMat4("view", view);
-        glm::mat4 floor = glm::mat4(1.0f);
-        floorShader.setMat4("model", floor);
-        floorShader.setVec3("lightColor", glm::vec3(0.2)); // 设置方块颜色
-        floorCube.Draw(floorShader);
+
 
         // configuration of light shader
         lightShader.use();
@@ -78,9 +71,20 @@ int main()
         glm::vec4 lightPos = glm::vec4(lightCube.getPosition(), 1.f);
         lightPos = light * lightPos;
 
+        // configuration of floor shader
+        floorShader.use();
+        floorShader.setMat4("projection", projection);
+        floorShader.setMat4("view", view);
+        glm::mat4 floor = glm::mat4(1.0f);
+        floorShader.setMat4("cube", floor);
+        floorShader.setVec3("lightColor", glm::vec3(1.0)); // 设置光源颜色
+        floorShader.setVec3("cubeColor", glm::vec3(0.2)); // 设置物体颜色
+        floorShader.setVec3("lightPos", lightPos[0], lightPos[1], lightPos[2]);
+        floorCube.Draw(floorShader);
+
         // configuration of model shader
         modelShader.use();
-        modelShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("lightColor", glm::vec3(1.0));
         modelShader.setVec3("lightPos", lightPos[0], lightPos[1], lightPos[2]);
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
