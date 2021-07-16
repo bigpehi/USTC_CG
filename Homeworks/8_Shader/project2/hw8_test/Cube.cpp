@@ -90,7 +90,7 @@ void Cube::genVerteces()
     glEnableVertexAttribArray(1);
 }
 
-void Cube::Draw(Shader& shader)
+void Cube::Draw()
 {
     glBindVertexArray(cubeVAO); // °ó¶¨VAO
     glDrawArrays(GL_TRIANGLES, 0, 36); // »æÍ¼
