@@ -41,8 +41,8 @@ int main()
     // load models
     //Model ourModel("../data/model/david/David328.obj");
     Model ourModel("../data/model/nanosuit/nanosuit.obj");
-    Cube lightCube(0., 18., 5., .3, .3, .3);
-    Cube floorCube(0.,-1.,0.,30.,1.,30.);
+    Cube lightCube(0., 20., 5., .3, .3, .3);
+    Cube floorCube(0.,-1.,0.,50.,1.,50.);
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -98,7 +98,7 @@ int main()
 
         // 计算光源位置
         glm::mat4 light = glm::mat4(1.0f);
-        light = glm::rotate(light, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0., 1, 0.));
+        light = glm::rotate(light, (float)glfwGetTime() * glm::radians(80.0f), glm::vec3(0., 1., 0.));
         glm::vec4 lightPos = glm::vec4(lightCube.getPosition(), 1.f);
         lightPos = light * lightPos;
         //glm::vec3 lightPosV3 = glm::vec3(lightPos[0], lightPos[1], lightPos[2]);
@@ -110,7 +110,8 @@ int main()
         glm::mat4 lightProjection, lightView;
         glm::mat4 lightSpaceMatrix;
         GLfloat near_plane = 1.0f, far_plane = 57.5f;
-        lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+        //lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+        lightProjection = glm::perspective(80.0f, (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane);
         //lightProjection = glm::perspective(45.0f, (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // Note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to refl
         lightView = glm::lookAt(lightPosV3, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
